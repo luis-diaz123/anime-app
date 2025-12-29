@@ -1,0 +1,404 @@
+/* ===============================
+   RESET BÁSICO
+================================ */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #121212;
+    color: #ffffff;
+}
+
+/* ===============================
+   LAYOUT GENERAL
+================================ */
+.container {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    height: 100vh;
+}
+
+/* ===============================
+   PANEL IZQUIERDO (TABLA)
+================================ */
+.left-panel {
+    padding: 15px;
+    overflow-y: auto;
+}
+
+/* ===============================
+   PANEL DERECHO (CONTROLES)
+================================ */
+.right-panel {
+    padding: 20px;
+    background: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ===============================
+   TABLA
+================================ */
+#tablaAnimes {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: #1a1a1a;
+}
+
+/* ENCABEZADOS */
+#tablaAnimes th {
+    background: #222;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #333;
+    font-size: 14px;
+}
+
+/* CELDAS */
+#tablaAnimes td {
+    padding: 8px;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ===============================
+   TAMAÑOS DE COLUMNAS (AJUSTADOS)
+================================ */
+
+/* ANIME (más ancho) */
+#tablaAnimes th:nth-child(1),
+#tablaAnimes td:nth-child(1) {
+    width: 40%;
+}
+
+/* ESTADO (compacto) */
+#tablaAnimes th:nth-child(2),
+#tablaAnimes td:nth-child(2) {
+    width: 11%;
+    text-align: center;
+}
+
+/* CALIFICACIÓN (solo estrellas) */
+#tablaAnimes th:nth-child(3),
+#tablaAnimes td:nth-child(3) {
+    width: 110px; /* justo para ⭐⭐⭐⭐⭐ */
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* NOTAS (segunda más grande) */
+#tablaAnimes th:nth-child(4),
+#tablaAnimes td:nth-child(4) {
+    width: 20%;
+    white-space: normal;
+}
+
+/* ACCIONES (solo botones) */
+#tablaAnimes th:nth-child(5),
+#tablaAnimes td:nth-child(5) {
+    width: 100px;
+    text-align: center;
+}
+
+/* ===============================
+   BOTONES DE ACCIÓN (TABLA)
+================================ */
+#tablaAnimes td button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 4px;
+    color: #ffffff;
+}
+
+#tablaAnimes td button:hover {
+    transform: scale(1.2);
+}
+
+/* ===============================
+   BOTONES GENERALES
+================================ */
+button {
+    padding: 8px;
+    background: #333;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #444;
+}
+
+.btn-primary {
+    background: #ff4081;
+}
+
+.btn-primary:hover {
+    background: #e91e63;
+}
+
+/* ===============================
+   BUSCADOR
+================================ */
+.search-input {
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* ===============================
+   FILTROS
+================================ */
+.filters h4 {
+    margin: 10px 0 5px;
+    font-size: 13px;
+    color: #ccc;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.filter-group button {
+    font-size: 12px;
+    padding: 5px 8px;
+    background: #2a2a2a;
+}
+
+.filter-group button.active {
+    background: #ff4081;
+}
+
+/* ===============================
+   CSV / UTILIDADES
+================================ */
+hr {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 10px 0;
+}
+
+.btn-file {
+    display: inline-block;
+    text-align: center;
+    background: #333;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.btn-file:hover {
+    background: #444;
+}
+
+/* ===============================
+   MODAL
+================================ */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #1e1e1e;
+    padding: 20px;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ===============================
+   FORMULARIO
+================================ */
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    padding: 8px;
+    font-size: 14px;
+    background: #2a2a2a;
+    border: none;
+    color: white;
+}
+
+.modal-content textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* ===============================
+   ACCIONES MODAL
+================================ */
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ===============================
+   ESTADOS (COLORES)
+================================ */
+.estado-si {
+    background: #1b5e20;
+}
+
+.estado-no {
+    background: #b71c1c;
+}
+
+.estado-emisión,
+.estado-emision {
+    background: #006064;
+}
+
+.estado-abandonado {
+    background: #4a148c;
+}
+
+.estado-incompleto {
+    background: #f9a825;
+    color: #000;
+}
+
+.estado-empezado {
+    background: #424242;
+    color: white;
+}
+
+/* ===============================
+   BOTÓN TEMA
+================================ */
+.btn-theme {
+    font-size: 22px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: transform 0.3s ease;
+}
+
+
+/* ===============================
+   TEMA OSCURO (DEFAULT)
+================================ */
+body.dark {
+    background: #121212;
+    color: #ffffff;
+}
+
+body.dark .right-panel {
+    background: #1e1e1e;
+}
+
+body.dark #tablaAnimes {
+    background: #1a1a1a;
+}
+
+/* ===============================
+   TEMA CLARO
+================================ */
+body.light {
+    background: #f4f4f4;
+    color: #000000;
+}
+
+body.light .right-panel {
+    background: #ffffff;
+}
+
+body.light #tablaAnimes {
+    background: #ffffff;
+}
+
+body.light #tablaAnimes th {
+    background: #e0e0e0;
+}
+
+body.light #tablaAnimes td {
+    border-bottom: 1px solid #ccc;
+}
+
+body.light button {
+    background: #ddd;
+    color: #000;
+}
+
+body.light .btn-primary {
+    background: #1976d2;
+    color: white;
+}
+
+
+/* ===============================
+   TOAST FLOTANTE
+================================ */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #323232;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: #2e7d32;
+}
+
+.toast.warning {
+    background: #ed6c02;
+}
+
+body.light .toast {
+    background: #222;
+}
+
+/* ===============================
+   PARA TITULO
+================================ */
+
+.titulo-anime {
+    width: 100%;       /* ajusta al ancho real de tu columna */
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.titulo-anime:hover {
+    opacity: 0.85;
+}
+
