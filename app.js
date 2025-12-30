@@ -27,7 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const filtrosCalificacion = document.querySelectorAll("#filtroCalificacion button");
 
     const toast = document.getElementById("toast");
-   
+
+    const btnHamburger = document.getElementById("btnHamburger");
+    const rightPanelWrapper = document.getElementById("rightPanelWrapper");
+
+    /* ======================
+       VARIABLES
+    ====================== */
     let editId = null;
     let filtroEstado = "todos";
     let filtroCalificacion = "todos";
@@ -36,14 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ======================
        STORAGE
     ====================== */
-    const obtenerAnimes = () =>
-        JSON.parse(localStorage.getItem("animes")) || [];
-
-    const guardarAnimes = data =>
-        localStorage.setItem("animes", JSON.stringify(data));
-
-    const generarID = () =>
-        Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const obtenerAnimes = () => JSON.parse(localStorage.getItem("animes")) || [];
+    const guardarAnimes = data => localStorage.setItem("animes", JSON.stringify(data));
+    const generarID = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
     /* ======================
        TOAST
@@ -55,8 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ======================
-       PARSER CSV REAL
-       (respeta comillas y comas)
+       PARSER CSV
     ====================== */
     function parseCSVLine(line) {
         const result = [];
@@ -65,15 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         for (let i = 0; i < line.length; i++) {
             const char = line[i];
-
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === "," && !inQuotes) {
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === "," && !inQuotes) {
                 result.push(current);
                 current = "";
-            } else {
-                current += char;
-            }
+            } else current += char;
         }
 
         result.push(current);
@@ -83,7 +79,16 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ======================
        MODAL
     ====================== */
-    btnAgregar.onclick = () => modal.classList.remove("hidden");
+    modal.classList.add("hidden"); // aseguramos que esté oculto al cargar
+
+    btnAgregar.onclick = () => {
+        modal.classList.remove("hidden");
+        document.getElementById("modalTitle").textContent = "Nuevo Anime";
+        form.reset();
+        editId = null;
+
+        if (rightPanelWrapper) rightPanelWrapper.classList.remove("show");
+    };
 
     cerrarModal.onclick = () => {
         modal.classList.add("hidden");
@@ -99,9 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let animes = obtenerAnimes();
 
         if (textoBusqueda) {
-            animes = animes.filter(a =>
-                a.nombre.toLowerCase().includes(textoBusqueda)
-            );
+            animes = animes.filter(a => a.nombre.toLowerCase().includes(textoBusqueda));
         }
 
         if (filtroEstado !== "todos") {
@@ -109,26 +112,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (filtroCalificacion !== "todos") {
-            animes = animes.filter(a =>
-                a.calificacion === Number(filtroCalificacion)
-            );
+            animes = animes.filter(a => a.calificacion === Number(filtroCalificacion));
         }
 
         animes.forEach(anime => {
             const tr = document.createElement("tr");
-
             tr.innerHTML = `
-                        <td>
-    <span
-        class="titulo-anime copiar"
-        title="${anime.nombre}"
-        data-texto="${anime.nombre}"
-    >
-        ${anime.nombre}
-    </span>
-</td>
-
-
+                <td>
+                    <span class="titulo-anime copiar" title="${anime.nombre}" data-texto="${anime.nombre}">
+                        ${anime.nombre}
+                    </span>
+                </td>
                 <td class="estado-${anime.estado.toLowerCase()}">${anime.estado}</td>
                 <td>${anime.calificacion === 0 ? "Pendiente" : "⭐".repeat(anime.calificacion)}</td>
                 <td>${anime.notas || ""}</td>
@@ -137,36 +131,32 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="btn-delete" data-id="${anime.id}">❌</button>
                 </td>
             `;
-
             tablaBody.appendChild(tr);
         });
     }
 
- /* ======================
-       PARA COPIAR NOMBRE DEL ANIME EN PC Y MOVIL
+    /* ======================
+       COPIAR NOMBRE DEL ANIME
     ====================== */
-/*pc*/
+    // PC
     tablaBody.addEventListener("dblclick", e => {
-    const el = e.target;
+        const el = e.target;
+        if (!el.classList.contains("copiar")) return;
+        navigator.clipboard.writeText(el.dataset.texto);
+        mostrarToast("📋 Nombre copiado");
+    });
 
-    if (!el.classList.contains("copiar")) return;
-
-    navigator.clipboard.writeText(el.dataset.texto);
-    mostrarToast("📋 Nombre copiado");
-});
-let pressTimer;
-/*movil*/
-tablaBody.addEventListener("touchstart", e => {
-    if (e.target.classList.contains("copiar")) {
-        pressTimer = setTimeout(() => {
-            navigator.clipboard.writeText(e.target.dataset.texto);
-            mostrarToast("📋 Nombre copiado");
-        }, 600);
-    }
-});
-
-tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
-
+    // Móvil (press and hold)
+    let pressTimer;
+    tablaBody.addEventListener("touchstart", e => {
+        if (e.target.classList.contains("copiar")) {
+            pressTimer = setTimeout(() => {
+                navigator.clipboard.writeText(e.target.dataset.texto);
+                mostrarToast("📋 Nombre copiado");
+            }, 600);
+        }
+    });
+    tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
 
     /* ======================
        BUSCADOR
@@ -195,7 +185,7 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
             const i = animes.findIndex(a => a.id === editId);
             animes[i] = data;
         } else {
-            animes.push(data);
+            animes.unshift(data);
         }
 
         guardarAnimes(animes);
@@ -227,6 +217,9 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
             notasInput.value = a.notas;
             editId = id;
             modal.classList.remove("hidden");
+            document.getElementById("modalTitle").textContent = "Editar Anime";
+
+            if (rightPanelWrapper) rightPanelWrapper.classList.remove("show"); // cerrar panel en móvil
         }
     };
 
@@ -259,29 +252,24 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
         if (!file) return;
 
         const reader = new FileReader();
-
         reader.onload = ev => {
             const lines = ev.target.result.split(/\r?\n/);
             const actuales = obtenerAnimes();
             let importados = 0;
-
-            // eliminar encabezado
-            lines.shift();
+            lines.shift(); // eliminar encabezado
 
             lines.forEach(line => {
                 if (!line.trim()) return;
-
                 const cols = parseCSVLine(line);
                 if (cols.length < 4) return;
 
-                actuales.push({
+                actuales.unshift({
                     id: generarID(),
                     nombre: cols[0],
                     estado: cols[1] || "No",
                     notas: cols[2] || "",
                     calificacion: Number(cols[3]) || 0
                 });
-
                 importados++;
             });
 
@@ -289,7 +277,6 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
             renderTabla();
             mostrarToast(`📥 ${importados} registro(s) importados`);
         };
-
         reader.readAsText(file);
         e.target.value = "";
     });
@@ -319,7 +306,7 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
     };
 
     /* ======================
-       DUPLICADOS
+       ELIMINAR DUPLICADOS
     ====================== */
     btnEliminarDuplicados.onclick = () => {
         const animes = obtenerAnimes();
@@ -327,7 +314,6 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
             mostrarToast("⚠️ No hay datos para limpiar", "warning");
             return;
         }
-
         if (!confirm("¿Eliminar duplicados?")) return;
 
         const map = new Map();
@@ -339,7 +325,6 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
         const eliminados = animes.length - map.size;
         guardarAnimes([...map.values()]);
         renderTabla();
-
         mostrarToast(
             eliminados > 0
                 ? `🧹 ${eliminados} duplicado(s) eliminados`
@@ -357,7 +342,6 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
             mostrarToast("⚠️ No hay registros para borrar", "warning");
             return;
         }
-
         if (!confirm(`¿Eliminar ${animes.length} registro(s)?`)) return;
 
         localStorage.removeItem("animes");
@@ -382,4 +366,14 @@ tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
 
     aplicarTema(localStorage.getItem("theme") || "dark");
     renderTabla();
+
+    /* ======================
+       BOTÓN HAMBURGUESA (MOVILES)
+    ====================== */
+    if (btnHamburger && rightPanelWrapper) {
+        btnHamburger.addEventListener("click", () => {
+            rightPanelWrapper.classList.toggle("show");
+        });
+    }
+
 });
