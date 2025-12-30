@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Anime App</title>
@@ -7,115 +8,122 @@
 </head>
 
 <body class="dark">
+    <button id="btnHamburger" class="btn-hamburger">☰</button>
 
-<div class="container">
+    <div class="container">
 
-    <div class="left-panel">
-        <table id="tablaAnimes">
-            <thead>
-                <tr>
-                    <th>Anime</th>
-                    <th>Estado</th>
-                    <th>Calificación</th>
-                    <th>Notas</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div class="right-panel">
-        <table id="test">
-            <thead>
-                <tr>
-                    <th>
-                        <input type="text" id="searchInput" placeholder="Buscar anime..." class="search-input">
-                    </th>
-                    <th>
-                        <button id="btnTheme" class="btn-theme">🌙</button>
-                    </th>
-                </tr>
-            </thead>
-        </table>
-        
-
-        <button id="btnAgregar" class="btn-primary">➕ Nuevo Anime</button>
-
-        <div class="filters">
-            <h4>Estado</h4>
-            <div class="filter-group" id="filtroEstado">
-                <button data-estado="todos" class="active">Todos</button>
-                <button data-estado="Si">Si</button>
-                <button data-estado="No">No</button>
-                <button data-estado="Emisión">Emisión</button>
-                <button data-estado="Abandonado">Abandonado</button>
-                <button data-estado="Incompleto">Incompleto</button>
-                <button data-estado="Empezado">Empezado</button>
-            </div>
-
-            <h4>Calificación</h4>
-            <div class="filter-group" id="filtroCalificacion">
-                <button data-calificacion="todos" class="active">Todos</button>
-                <button data-calificacion="0">Pendiente</button>
-                <button data-calificacion="1">⭐</button>
-                <button data-calificacion="2">⭐⭐</button>
-                <button data-calificacion="3">⭐⭐⭐</button>
-                <button data-calificacion="4">⭐⭐⭐⭐</button>
-                <button data-calificacion="5">⭐⭐⭐⭐⭐</button>
-            </div>
+        <div class="left-panel">
+            <table id="tablaAnimes">
+                <thead>
+                    <tr>
+                        <th>Anime</th>
+                        <th>Estado</th>
+                        <th>Calificación</th>
+                        <th>Notas</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
 
-        <hr>
+        <div id="rightPanelWrapper" class="right-panel-wrapper hide">
+            <div class="right-panel">
 
-        <button id="btnExportarCSV">📤 Exportar CSV</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="text" id="searchInput" placeholder="Buscar anime..."
+                                    class="search-input">
+                            </th>
+                            <th>
+                                <button id="btnTheme" class="btn-theme">🌙</button>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
 
-        <label class="btn-file">
-            📥 Importar CSV
-            <input type="file" id="inputCSV" accept=".csv" hidden>
-        </label>
+                <button id="btnAgregar" class="btn-primary">➕ Nuevo Anime</button>
 
-        <button id="btnEliminarDuplicados">🧹 Eliminar duplicados</button>
-        <button id="btnReset">🗑️ Borrar todos los registros</button>
-    </div>
-</div>
+                <div class="filters">
+                    <h4>Estado</h4>
+                    <div class="filter-group" id="filtroEstado">
+                        <button data-estado="todos" class="active">Todos</button>
+                        <button data-estado="Si">Si</button>
+                        <button data-estado="No">No</button>
+                        <button data-estado="Emisión">Emisión</button>
+                        <button data-estado="Abandonado">Abandonado</button>
+                        <button data-estado="Incompleto">Incompleto</button>
+                        <button data-estado="Empezado">Empezado</button>
+                    </div>
 
-<div id="modal" class="modal hidden">
-    <div class="modal-content">
-        <h3>Nuevo Anime</h3>
-        <form id="formAnime">
-            <input type="text" id="nombre" placeholder="Nombre del anime" required>
+                    <h4>Calificación</h4>
+                    <div class="filter-group" id="filtroCalificacion">
+                        <button data-calificacion="todos" class="active">Todos</button>
+                        <button data-calificacion="0">Pendiente</button>
+                        <button data-calificacion="1">⭐</button>
+                        <button data-calificacion="2">⭐⭐</button>
+                        <button data-calificacion="3">⭐⭐⭐</button>
+                        <button data-calificacion="4">⭐⭐⭐⭐</button>
+                        <button data-calificacion="5">⭐⭐⭐⭐⭐</button>
+                    </div>
+                </div>
 
-            <select id="estado">
-                <option value="No">No</option>
-                <option value="Si">Si</option>
-                <option value="Emisión">Emisión</option>
-                <option value="Abandonado">Abandonado</option>
-                <option value="Incompleto">Incompleto</option>
-                <option value="Empezado">Empezado</option>
-            </select>
+                <hr>
 
-            <select id="calificacion">
-                <option value="0">Pendiente</option>
-                <option value="1">⭐</option>
-                <option value="2">⭐⭐</option>
-                <option value="3">⭐⭐⭐</option>
-                <option value="4">⭐⭐⭐⭐</option>
-                <option value="5">⭐⭐⭐⭐⭐</option>
-            </select>
+                <button id="btnExportarCSV">📤 Exportar CSV</button>
 
-            <textarea id="notas" placeholder="Notas"></textarea>
+                <label class="btn-file">
+                    📥 Importar CSV
+                    <input type="file" id="inputCSV" accept=".csv" hidden>
+                </label>
 
-            <div class="modal-actions">
-                <button type="submit" class="btn-primary">Guardar</button>
-                <button type="button" id="cerrarModal">Cancelar</button>
+                <button id="btnEliminarDuplicados">🧹 Eliminar duplicados</button>
+                <button id="btnReset">🗑️ Borrar todos los registros</button>
+
             </div>
-        </form>
+        </div>
     </div>
-</div>
 
-<div id="toast" class="toast hidden"></div>
+    <!-- MODAL -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modalTitle">Nuevo Anime</h3>
 
-<script src="app.js"></script>
+            <form id="formAnime">
+                <input type="text" id="nombre" placeholder="Nombre del anime" required>
+
+                <select id="estado">
+                    <option value="No">No</option>
+                    <option value="Si">Si</option>
+                    <option value="Emisión">Emisión</option>
+                    <option value="Abandonado">Abandonado</option>
+                    <option value="Incompleto">Incompleto</option>
+                    <option value="Empezado">Empezado</option>
+                </select>
+
+                <select id="calificacion">
+                    <option value="0">Pendiente</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+
+                <textarea id="notas" placeholder="Notas"></textarea>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <button type="button" id="cerrarModal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
 </body>
 </html>
