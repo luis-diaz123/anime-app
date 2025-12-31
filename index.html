@@ -1,52 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Anime App</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Animes</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="dark">
+
+    <!-- BLOQUEO ORIENTACIÓN -->
+    <div id="orientationBlock">
+        <div class="orientation-content">
+            <p>Gira tu pantalla</p>
+        </div>
+    </div>
+
+    <!-- BOTÓN HAMBURGUESA -->
     <button id="btnHamburger" class="btn-hamburger">☰</button>
 
+    <!-- CONTENEDOR PRINCIPAL -->
     <div class="container">
 
+        <!-- PANEL IZQUIERDO -->
         <div class="left-panel">
-            <table id="tablaAnimes">
-                <thead>
-                    <tr>
-                        <th>Anime</th>
-                        <th>Estado</th>
-                        <th>Calificación</th>
-                        <th>Notas</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+
+            <!-- TÍTULO -->
+            <h2 style="margin-top: 0;">📺 Registro de Animes</h2>
+
+            <!-- TABLA -->
+            <div class="tabla-wrapper">
+                <table id="tablaAnimes">
+                    <thead>
+                        <tr id="prueba">
+                            <th>Anime</th>
+                            <th>Estado</th>
+                            <th>Calificación</th>
+                            <th>Notas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
         </div>
 
-        <div id="rightPanelWrapper" class="right-panel-wrapper hide">
+        <!-- PANEL DERECHO -->
+        <div id="rightPanelWrapper" class="right-panel-wrapper">
             <div class="right-panel">
 
+                <!-- BUSCADOR + TEMA -->
                 <table>
                     <thead>
                         <tr>
                             <th>
-                                <input type="text" id="searchInput" placeholder="Buscar anime..."
-                                    class="search-input">
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    class="search-input"
+                                    placeholder="Buscar anime..."
+                                />
                             </th>
-                            <th>
+                            <th style="width:40px;">
                                 <button id="btnTheme" class="btn-theme">🌙</button>
                             </th>
                         </tr>
                     </thead>
                 </table>
 
+                <!-- ACCIONES -->
                 <button id="btnAgregar" class="btn-primary">➕ Nuevo Anime</button>
 
+                <!-- FILTROS -->
                 <div class="filters">
+
                     <h4>Estado</h4>
                     <div class="filter-group" id="filtroEstado">
                         <button data-estado="todos" class="active">Todos</button>
@@ -68,19 +96,23 @@
                         <button data-calificacion="4">⭐⭐⭐⭐</button>
                         <button data-calificacion="5">⭐⭐⭐⭐⭐</button>
                     </div>
+
                 </div>
 
-                <hr>
+                <hr />
 
-                <button id="btnExportarCSV">📤 Exportar CSV</button>
+                <!-- UTILIDADES -->
+                <button id="btnExportarCSV" class="btn-style">📤 Exportar CSV</button>
 
-                <label class="btn-file">
-                    📥 Importar CSV
-                    <input type="file" id="inputCSV" accept=".csv" hidden>
-                </label>
+                <button class="btn-style">
+                    <label style="cursor:pointer;">
+                        📥 Importar CSV
+                        <input type="file" id="inputCSV" accept=".csv" hidden />
+                    </label>
+                </button>
 
-                <button id="btnEliminarDuplicados">🧹 Eliminar duplicados</button>
-                <button id="btnReset">🗑️ Borrar todos los registros</button>
+                <button id="btnEliminarDuplicados" class="btn-style">🧹 Eliminar duplicados</button>
+                <button id="btnReset" class="btn-style">🗑️ Borrar todos</button>
 
             </div>
         </div>
@@ -89,10 +121,16 @@
     <!-- MODAL -->
     <div id="modal" class="modal hidden">
         <div class="modal-content">
+
             <h3 id="modalTitle">Nuevo Anime</h3>
 
             <form id="formAnime">
-                <input type="text" id="nombre" placeholder="Nombre del anime" required>
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Nombre del anime"
+                    required
+                />
 
                 <select id="estado">
                     <option value="No">No</option>
@@ -119,11 +157,14 @@
                     <button type="button" id="cerrarModal">Cancelar</button>
                 </div>
             </form>
+
         </div>
     </div>
 
-    <div id="toast" class="toast hidden"></div>
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
 
+    <!-- JS -->
     <script src="app.js"></script>
 </body>
 </html>
