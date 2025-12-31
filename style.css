@@ -11,6 +11,8 @@ body {
     background: #121212;
     color: #ffffff;
     overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 /* ===============================
@@ -23,19 +25,17 @@ body {
 }
 
 /* ===============================
-   PANEL IZQUIERDO (TABLA)
+   PANEL IZQUIERDO
 ================================ */
 .left-panel {
     padding: 15px;
     overflow-y: auto;
-    overflow-x: hidden;
 }
 
 /* ===============================
-   PANEL DERECHO (CONTROLES)
+   PANEL DERECHO
 ================================ */
 .right-panel-wrapper {
-    width: 100%;
     height: 100%;
 }
 
@@ -45,6 +45,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* ===============================
@@ -57,36 +61,31 @@ body {
     background: #1a1a1a;
 }
 
-/* ENCABEZADOS */
 #tablaAnimes th {
     background: #222;
     padding: 10px;
-    text-align: left;
-    border-bottom: 2px solid #333;
     font-size: 14px;
+    text-align: left;
 }
 
-/* CELDAS */
 #tablaAnimes td {
     padding: 8px;
     border-bottom: 1px solid #2a2a2a;
     font-size: 14px;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 /* ===============================
-   TAMAÑOS DE COLUMNAS
+   COLUMNAS
 ================================ */
 #tablaAnimes th:nth-child(1),
-#tablaAnimes td:nth-child(1) {
-    width: 40%;
-}
+#tablaAnimes td:nth-child(1) { width: 40%; }
 
 #tablaAnimes th:nth-child(2),
 #tablaAnimes td:nth-child(2) {
-    width: 11%;
+    width: 12%;
     text-align: center;
 }
 
@@ -109,23 +108,7 @@ body {
 }
 
 /* ===============================
-   BOTONES DE ACCIÓN (TABLA)
-================================ */
-#tablaAnimes td button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 0 4px;
-    color: #ffffff;
-}
-
-#tablaAnimes td button:hover {
-    transform: scale(1.2);
-}
-
-/* ===============================
-   BOTONES GENERALES
+   BOTONES
 ================================ */
 button {
     padding: 8px;
@@ -133,7 +116,7 @@ button {
     border: none;
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
+    border-radius: 8px;
 }
 
 button:hover {
@@ -142,15 +125,14 @@ button:hover {
 
 .btn-primary {
     background: #ff4081;
-    border-radius: 10px;
 }
 
-.btn-primary:hover {
-    background: #e91e63;
+.btn-style {
+    background: #768ef8;
 }
 
-#cerrarModal {
-    border-radius: 10px;
+.btn-style:hover {
+    background: #214afd;
 }
 
 /* ===============================
@@ -158,14 +140,12 @@ button:hover {
 ================================ */
 .search-input {
     padding: 8px;
-    font-size: 14px;
 }
 
 /* ===============================
    FILTROS
 ================================ */
 .filters h4 {
-    margin: 10px 0 5px;
     font-size: 13px;
     color: #ccc;
 }
@@ -176,35 +156,8 @@ button:hover {
     gap: 5px;
 }
 
-.filter-group button {
-    font-size: 12px;
-    padding: 5px 8px;
-    background: #2a2a2a;
-}
-
 .filter-group button.active {
     background: #ff4081;
-}
-
-/* ===============================
-   CSV / UTILIDADES
-================================ */
-hr {
-    border: none;
-    border-top: 1px solid #333;
-    margin: 10px 0;
-}
-
-.btn-file {
-    display: inline-block;
-    text-align: center;
-    background: #333;
-    padding: 8px;
-    cursor: pointer;
-}
-
-.btn-file:hover {
-    background: #444;
 }
 
 /* ===============================
@@ -213,11 +166,11 @@ hr {
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0,0,0,.75);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 3000;
 }
 
 .modal.hidden {
@@ -225,108 +178,23 @@ hr {
 }
 
 .modal-content {
-    border-radius: 10px;
     background: #1e1e1e;
     padding: 20px;
     width: 340px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* ===============================
-   FORMULARIO
-================================ */
 .modal-content input,
-.modal-content select {
-    padding: 8px;
-    border-radius: 10px;
-    font-size: 14px;
+.modal-content select,
+.modal-content textarea {
     background: #2a2a2a;
     border: none;
-    margin: 10px;
-    color: white;
-}
-
-#nombre,
-#notas {
-    width: 90%;
-}
-
-#modalTitle {
-    text-align: center;
-}
-
-/* ===============================
-   ACCIONES MODAL
-================================ */
-.modal-actions {
-    display: flex;
-    justify-content: space-between;
-}
-
-/* ===============================
-   ESTADOS (COLORES)
-================================ */
-.estado-si { background: #1b5e20; }
-.estado-no { background: #b71c1c; }
-.estado-emisión,
-.estado-emision { background: #006064; }
-.estado-abandonado { background: #4a148c; }
-.estado-incompleto { background: #f9a825; color: #000; }
-.estado-empezado { background: #424242; }
-
-/* ===============================
-   BOTÓN TEMA
-================================ */
-.btn-theme {
-    font-size: 22px;
+    border-radius: 8px;
     padding: 8px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-}
-
-/* ===============================
-   TEMA OSCURO
-================================ */
-body.dark {
-    background: #121212;
-    color: #ffffff;
-}
-
-/* ===============================
-   TEMA CLARO
-================================ */
-body.light {
-    background: #f4f4f4;
-    color: #000000;
-}
-
-body.light .right-panel {
-    background: #ffffff;
-}
-
-body.light #tablaAnimes {
-    background: #ffffff;
-}
-
-body.light #tablaAnimes th {
-    background: #e0e0e0;
-}
-
-body.light #tablaAnimes td {
-    border-bottom: 1px solid #ccc;
-}
-
-body.light button {
-    background: #ddd;
-    color: #000;
-}
-
-body.light .btn-primary {
-    background: #1976d2;
-    color: white;
+    color: #fff;
 }
 
 /* ===============================
@@ -334,57 +202,55 @@ body.light .btn-primary {
 ================================ */
 .toast {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
     background: #323232;
     color: #fff;
-    padding: 12px 18px;
-    border-radius: 10px;
+    padding: 12px 20px;
+    border-radius: 12px;
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-    z-index: 9999;
+    transition: all .4s ease;
+    z-index: 4000;
 }
 
 .toast.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
 /* ===============================
-   TITULO ANIME
+   ESTADOS
 ================================ */
-.titulo-anime {
-    display: inline-block;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-}
+.estado-si { background: #1b5e20; }
+.estado-no { background: #b71c1c; }
+.estado-emision,
+.estado-emisión { background: #006064; }
+.estado-abandonado { background: #4a148c; }
+.estado-incompleto { background: #f9a825; color:#000; }
+.estado-empezado { background: #424242; }
 
 /* ===============================
-   BOTÓN HAMBURGUESA
+   HAMBURGER
 ================================ */
 .btn-hamburger {
     display: none;
     position: fixed;
     top: 15px;
     left: 15px;
-    font-size: 24px;
     background: #ff4081;
-    color: white;
-    border: none;
-    padding: 10px 12px;
-    cursor: pointer;
-    z-index: 2000;
-    border-radius: 6px;
+    color: #fff;
+    font-size: 22px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    z-index: 3500;
 }
 
 /* ===============================
    MOBILE
 ================================ */
 @media (max-width: 900px) {
+
     .container {
         grid-template-columns: 1fr;
     }
@@ -401,11 +267,99 @@ body.light .btn-primary {
         height: 100vh;
         background: #1e1e1e;
         transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 1500;
+        transition: transform .3s ease;
+        z-index: 2500;
     }
 
     .right-panel-wrapper.show {
         transform: translateX(0);
     }
+
+    /* EMOJIS ESTADO */
+    #tablaAnimes td:nth-child(2) {
+        font-size: 0;
+    }
+
+    .estado-si::before { content:"✅"; font-size:16px; }
+    .estado-no::before { content:"❌"; font-size:16px; }
+    .estado-emision::before,
+    .estado-emisión::before { content:"📺"; font-size:16px; }
+    .estado-abandonado::before { content:"🚫"; font-size:16px; }
+    .estado-incompleto::before { content:"⏸️"; font-size:16px; }
+    .estado-empezado::before { content:"▶️"; font-size:16px; }
+}
+
+/* ===============================
+   BLOQUEO ORIENTACIÓN
+================================ */
+#orientationBlock {
+    position: fixed;
+    inset: 0;
+    background: #2a2a2a;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+}
+
+.orientation-content::before {
+    content: "📱";
+    font-size: 48px;
+    display: block;
+    animation: rotatePhone 2s infinite;
+}
+
+@keyframes rotatePhone {
+    0% { transform: rotate(0); opacity:.6; }
+    50% { transform: rotate(90deg); opacity:1; }
+    100% { transform: rotate(0); opacity:.6; }
+}
+
+@media (max-width:900px) and (orientation:portrait) {
+    .container,
+    .btn-hamburger,
+    .modal,
+    .toast {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    #orientationBlock {
+        display: flex;
+    }
+}
+
+/* ===============================
+   TEMA CLARO
+================================ */
+body.light {
+    background: #f4f4f4;
+    color: #000;
+}
+
+body.light .right-panel,
+body.light .right-panel-wrapper {
+    background: #fff;
+    color: #000;
+}
+
+body.light .tabla-wrapper {
+    background: #fff;
+    color: #020202ff;
+}
+body.light #tablaAnimes {
+    background: #fff;
+}
+body.light button {
+    background: #ddd;
+    color: #000;
+}
+
+body.light .btn-primary {
+    background: #1976d2;
+    color: #fff;
+}
+
+body.light .btn-hamburger {
+    background: #1976d2;
 }
