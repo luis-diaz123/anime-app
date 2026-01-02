@@ -1,5 +1,5 @@
 /* ===============================
-   RESET BÁSICO
+   RESET
 ================================ */
 * {
     box-sizing: border-box;
@@ -9,14 +9,14 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: #121212;
-    color: #ffffff;
+    color: #fff;
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
 /* ===============================
-   LAYOUT GENERAL
+   LAYOUT
 ================================ */
 .container {
     display: grid;
@@ -56,8 +56,8 @@ body {
 ================================ */
 #tablaAnimes {
     width: 100%;
-    table-layout: fixed;
     border-collapse: collapse;
+    table-layout: fixed;
     background: #1a1a1a;
 }
 
@@ -77,35 +77,21 @@ body {
     text-overflow: ellipsis;
 }
 
-/* ===============================
-   COLUMNAS
-================================ */
+/* COLUMNAS */
 #tablaAnimes th:nth-child(1),
 #tablaAnimes td:nth-child(1) { width: 40%; }
 
 #tablaAnimes th:nth-child(2),
-#tablaAnimes td:nth-child(2) {
-    width: 12%;
-    text-align: center;
-}
+#tablaAnimes td:nth-child(2) { width: 12%; text-align:center; }
 
 #tablaAnimes th:nth-child(3),
-#tablaAnimes td:nth-child(3) {
-    width: 110px;
-    text-align: center;
-}
+#tablaAnimes td:nth-child(3) { width: 110px; text-align:center; }
 
 #tablaAnimes th:nth-child(4),
-#tablaAnimes td:nth-child(4) {
-    width: 20%;
-    white-space: normal;
-}
+#tablaAnimes td:nth-child(4) { width: 20%; white-space: normal; }
 
 #tablaAnimes th:nth-child(5),
-#tablaAnimes td:nth-child(5) {
-    width: 100px;
-    text-align: center;
-}
+#tablaAnimes td:nth-child(5) { width: 100px; text-align:center; }
 
 /* ===============================
    BOTONES
@@ -119,21 +105,11 @@ button {
     border-radius: 8px;
 }
 
-button:hover {
-    background: #444;
-}
+button:hover { background:#444; }
 
-.btn-primary {
-    background: #ff4081;
-}
-
-.btn-style {
-    background: #768ef8;
-}
-
-.btn-style:hover {
-    background: #214afd;
-}
+.btn-primary { background:#ff4081; }
+.btn-style { background:#768ef8; }
+.btn-style:hover { background:#214afd; }
 
 /* ===============================
    BUSCADOR
@@ -157,7 +133,7 @@ button:hover {
 }
 
 .filter-group button.active {
-    background: #ff4081;
+    background:#ff4081;
 }
 
 /* ===============================
@@ -173,28 +149,26 @@ button:hover {
     z-index: 3000;
 }
 
-.modal.hidden {
-    display: none;
-}
+.modal.hidden { display:none; }
 
 .modal-content {
-    background: #1e1e1e;
-    padding: 20px;
-    width: 340px;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background:#1e1e1e;
+    padding:20px;
+    width:340px;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
 .modal-content input,
 .modal-content select,
 .modal-content textarea {
-    background: #2a2a2a;
-    border: none;
-    border-radius: 8px;
-    padding: 8px;
-    color: #fff;
+    background:#2a2a2a;
+    border:none;
+    border-radius:8px;
+    padding:8px;
+    color:#fff;
 }
 
 /* ===============================
@@ -222,13 +196,13 @@ button:hover {
 /* ===============================
    ESTADOS
 ================================ */
-.estado-si { background: #1b5e20; }
-.estado-no { background: #b71c1c; }
+.estado-si { background:#1b5e20; }
+.estado-no { background:#b71c1c; }
 .estado-emision,
-.estado-emisión { background: #006064; }
-.estado-abandonado { background: #4a148c; }
-.estado-incompleto { background: #f9a825; color:#000; }
-.estado-empezado { background: #424242; }
+.estado-emisión { background:#006064; }
+.estado-abandonado { background:#4a148c; }
+.estado-incompleto { background:#f9a825; color:#000; }
+.estado-empezado { background:#424242; }
 
 /* ===============================
    HAMBURGER
@@ -249,15 +223,11 @@ button:hover {
 /* ===============================
    MOBILE
 ================================ */
-@media (max-width: 900px) {
+@media (max-width:900px) {
 
-    .container {
-        grid-template-columns: 1fr;
-    }
+    .container { grid-template-columns:1fr; }
 
-    .btn-hamburger {
-        display: block;
-    }
+    .btn-hamburger { display:block; }
 
     .right-panel-wrapper {
         position: fixed;
@@ -276,9 +246,7 @@ button:hover {
     }
 
     /* EMOJIS ESTADO */
-    #tablaAnimes td:nth-child(2) {
-        font-size: 0;
-    }
+    #tablaAnimes td:nth-child(2) { font-size:0; }
 
     .estado-si::before { content:"✅"; font-size:16px; }
     .estado-no::before { content:"❌"; font-size:16px; }
@@ -324,42 +292,93 @@ button:hover {
         pointer-events: none;
     }
 
-    #orientationBlock {
-        display: flex;
-    }
+    #orientationBlock { display:flex; }
 }
 
 /* ===============================
    TEMA CLARO
 ================================ */
 body.light {
-    background: #f4f4f4;
-    color: #000;
+    background:#f4f4f4;
+    color:#000;
 }
 
-body.light .right-panel,
-body.light .right-panel-wrapper {
-    background: #fff;
-    color: #000;
-}
-
-body.light .tabla-wrapper {
-    background: #fff;
-    color: #020202ff;
-}
 body.light #tablaAnimes {
-    background: #fff;
+    background:#fff;
 }
+
+body.light #tablaAnimes th {
+    background:#e0e0e0;
+}
+
+body.light #tablaAnimes td {
+    border-bottom:1px solid #ccc;
+}
+
+body.light .right-panel {
+    background:#fff;
+    color:#000;
+}
+
 body.light button {
-    background: #ddd;
-    color: #000;
+    background:#ddd;
+    color:#000;
 }
 
 body.light .btn-primary {
-    background: #1976d2;
-    color: #fff;
+    background:#1976d2;
+    color:#fff;
 }
 
 body.light .btn-hamburger {
-    background: #1976d2;
+    background:#1976d2;
+}
+
+/* ===============================
+   BOTÓN COMPARTIR
+================================ */
+#btnShare {
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#btnShare:hover {
+    background: #43a047;
+    transform: scale(1.05);
+}
+
+#btnShare:active {
+    transform: scale(0.95);
+}
+
+body.light #btnShare {
+    background: #2e7d32;
+}
+
+body.light #btnShare:hover {
+    background: #1b5e20;
+}
+
+/* ===============================
+   VISTA COMPARTIDA
+================================ */
+body.shared #btnAgregar,
+body.shared #btnExportarCSV,
+body.shared #inputCSV,
+body.shared #btnEliminarDuplicados,
+body.shared #btnReset,
+body.shared .btn-edit,
+body.shared .btn-delete,
+body.shared #btnShare {
+    display: none !important;
+}
+
+body.shared {
+    user-select: text;
 }
