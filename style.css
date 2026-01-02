@@ -1,5 +1,5 @@
 /* ===============================
-   RESET
+    RESET
 ================================ */
 * {
     box-sizing: border-box;
@@ -16,7 +16,7 @@ body {
 }
 
 /* ===============================
-   LAYOUT
+    LAYOUT
 ================================ */
 .container {
     display: grid;
@@ -25,17 +25,17 @@ body {
 }
 
 /* ===============================
-   PANEL IZQUIERDO
+    PANEL IZQUIERDO
 ================================ */
 .left-panel {
     padding: 15px;
     overflow-y: scroll;
-     scrollbar-color: #888 transparent;
+    scrollbar-color: #888 transparent;
     scrollbar-width: thin;
 }
 
 /* ===============================
-   PANEL DERECHO
+    PANEL DERECHO
 ================================ */
 .right-panel-wrapper {
     height: 100%;
@@ -53,7 +53,7 @@ body {
 }
 
 /* ===============================
-   TABLA
+    TABLA
 ================================ */
 #tablaAnimes {
     width: 100%;
@@ -95,7 +95,7 @@ body {
 #tablaAnimes td:nth-child(5) { width: 100px; text-align:center; }
 
 /* ===============================
-   BOTONES
+    BOTONES
 ================================ */
 button {
     padding: 8px;
@@ -104,6 +104,7 @@ button {
     color: #fff;
     cursor: pointer;
     border-radius: 8px;
+    transition: background 0.2s;
 }
 
 button:hover { background:#444; }
@@ -112,19 +113,30 @@ button:hover { background:#444; }
 .btn-style { background:#768ef8; }
 .btn-style:hover { background:#214afd; }
 
-/* ===============================
-   BUSCADOR
-================================ */
-.search-input {
-    padding: 8px;
+/* Botón compartir verde */
+#btnCompartir {
+    background: #4caf50;
+}
+#btnCompartir:hover {
+    background: #388e3c;
 }
 
 /* ===============================
-   FILTROS
+    BUSCADOR Y FILTROS
 ================================ */
+.search-input {
+    padding: 8px;
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 4px;
+}
+
 .filters h4 {
     font-size: 13px;
     color: #ccc;
+    margin-bottom: 8px;
 }
 
 .filter-group {
@@ -138,7 +150,7 @@ button:hover { background:#444; }
 }
 
 /* ===============================
-   MODAL
+    MODAL
 ================================ */
 .modal {
     position: fixed;
@@ -168,13 +180,12 @@ button:hover { background:#444; }
     background:#2a2a2a;
     border:none;
     border-radius:8px;
-    margin: 10px;
-    padding:8px;
+    padding:10px;
     color:#fff;
 }
 
 /* ===============================
-   TOAST
+    TOAST
 ================================ */
 .toast {
     position: fixed;
@@ -188,6 +199,7 @@ button:hover { background:#444; }
     opacity: 0;
     transition: all .4s ease;
     z-index: 4000;
+    pointer-events: none;
 }
 
 .toast.show {
@@ -196,18 +208,17 @@ button:hover { background:#444; }
 }
 
 /* ===============================
-   ESTADOS
+    ESTADOS COLORES
 ================================ */
 .estado-si { background:#1b5e20; }
 .estado-no { background:#b71c1c; }
-.estado-emision,
-.estado-emisión { background:#006064; }
+.estado-emision, .estado-emisión { background:#006064; }
 .estado-abandonado { background:#4a148c; }
 .estado-incompleto { background:#f9a825; color:#000; }
 .estado-empezado { background:#424242; }
 
 /* ===============================
-   HAMBURGER
+    HAMBURGER Y RESPONSIVE
 ================================ */
 .btn-hamburger {
     display: none;
@@ -222,15 +233,9 @@ button:hover { background:#444; }
     z-index: 3500;
 }
 
-/* ===============================
-   MOBILE
-================================ */
 @media (max-width:900px) {
-
     .container { grid-template-columns:1fr; }
-
     .btn-hamburger { display:block; }
-
     .right-panel-wrapper {
         position: fixed;
         top: 0;
@@ -242,25 +247,11 @@ button:hover { background:#444; }
         transition: transform .3s ease;
         z-index: 2500;
     }
-
-    .right-panel-wrapper.show {
-        transform: translateX(0);
-    }
-
-    /* EMOJIS ESTADO */
-    #tablaAnimes td:nth-child(2) { font-size:0; }
-
-    .estado-si::before { content:"✅"; font-size:16px; }
-    .estado-no::before { content:"❌"; font-size:16px; }
-    .estado-emision::before,
-    .estado-emisión::before { content:"📺"; font-size:16px; }
-    .estado-abandonado::before { content:"🚫"; font-size:16px; }
-    .estado-incompleto::before { content:"⏸️"; font-size:16px; }
-    .estado-empezado::before { content:"▶️"; font-size:16px; }
+    .right-panel-wrapper.show { transform: translateX(0); }
 }
 
 /* ===============================
-   BLOQUEO ORIENTACIÓN
+    BLOQUEO ORIENTACIÓN
 ================================ */
 #orientationBlock {
     position: fixed;
@@ -272,82 +263,52 @@ button:hover { background:#444; }
     z-index: 5000;
 }
 
-.orientation-content::before {
-    content: "📱";
-    font-size: 48px;
-    display: block;
-    animation: rotatePhone 2s infinite;
-}
-
-@keyframes rotatePhone {
-    0% { transform: rotate(0); opacity:.6; }
-    50% { transform: rotate(90deg); opacity:1; }
-    100% { transform: rotate(0); opacity:.6; }
-}
-
 @media (max-width:900px) and (orientation:portrait) {
-    .container,
-    .btn-hamburger,
-    .modal,
-    .toast {
-        visibility: hidden;
-        pointer-events: none;
-    }
-
+    .container, .btn-hamburger, .modal, .toast { visibility: hidden; }
     #orientationBlock { display:flex; }
 }
 
 /* ===============================
-   TEMA CLARO
+    TEMA CLARO
 ================================ */
-body.light {
-    background:#f4f4f4;
-    color:#000;
-}
+body.light { background:#f4f4f4; color:#000; }
+body.light #tablaAnimes { background:#fff; }
+body.light #tablaAnimes th { background:#e0e0e0; }
+body.light .right-panel { background:#fff; color:#000; }
+body.light button { background:#ddd; color:#000; }
+body.light .btn-primary { background:#1976d2; color:#fff; }
 
-body.light #tablaAnimes {
-    background:#fff;
-}
-
-body.light #tablaAnimes th {
-    background:#e0e0e0;
-}
-
-body.light #tablaAnimes td {
-    border-bottom:1px solid #ccc;
-}
-
-body.light .right-panel {
-    background:#fff;
-    color:#000;
-}
-
-body.light button {
-    background:#ddd;
-    color:#000;
-}
-
-body.light .btn-primary {
-    background:#1976d2;
-    color:#fff;
-}
-
-body.light .btn-hamburger {
-    background:#1976d2;
-}
-/* Ocultar elementos en modo lectura */
+/* ===============================
+    MODO LECTURA (NUEVO)
+================================ */
+body.readonly-mode .btn-edit,
+body.readonly-mode .btn-delete,
 body.readonly-mode #btnAgregar,
 body.readonly-mode #btnReset,
 body.readonly-mode #btnEliminarDuplicados,
-body.readonly-mode label[for="inputCSV"], /* Botón importar */
-body.readonly-mode .btn-style:nth-of-type(2), /* Selector de archivo */
-body.readonly-mode #btnCompartir {
+body.readonly-mode #btnCompartir,
+body.readonly-mode hr,
+body.readonly-mode .btn-style:has(input[type="file"]), /* Botón importar */
+body.readonly-mode #btnExportarCSV {
     display: none !important;
 }
 
-/* Ajustar la columna de acciones si está vacía */
-body.readonly-mode #tablaAnimes th:last-child,
-body.readonly-mode #tablaAnimes td:last-child {
-    width: 0;
+/* Ocultamos la columna de acciones en la tabla */
+body.readonly-mode #tablaAnimes th:nth-child(5),
+body.readonly-mode #tablaAnimes td:nth-child(5) {
     display: none;
+}
+
+/* Ajustamos el ancho de las otras columnas para compensar */
+body.readonly-mode #tablaAnimes th:nth-child(1),
+body.readonly-mode #tablaAnimes td:nth-child(1) {
+    width: 50%;
+}
+
+/* Indicador visual de que es modo lectura */
+body.readonly-mode h2::after {
+    content: " (Solo Lectura)";
+    font-size: 12px;
+    color: #ff4081;
+    display: block;
 }
