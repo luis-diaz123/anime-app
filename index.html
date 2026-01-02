@@ -1,20 +1,161 @@
-<hr />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Animes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="ICONO.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="ICONO.png">
+</head>
 
-<button id="btnExportarJSON" class="btn-style" style="background:#673ab7;">📤 Exportar Copia (JSON)</button>
+<body class="dark">
 
-<button class="btn-style" style="background:#9c27b0;">
-    <label style="cursor:pointer;">
-        📥 Importar Copia (JSON)
-        <input type="file" id="inputJSON" accept=".json" hidden />
-    </label>
-</button>
+    <div id="orientationBlock">
+        <div class="orientation-content">
+            <p>Gira tu pantalla</p>
+        </div>
+    </div>
 
-<button class="btn-style">
-    <label style="cursor:pointer;">
-        📄 Importar desde Excel (CSV)
-        <input type="file" id="inputCSV" accept=".csv" hidden />
-    </label>
-</button>
+    <button id="btnHamburger" class="btn-hamburger">☰</button>
 
-<button id="btnEliminarDuplicados" class="btn-style">🧹 Limpiar Duplicados</button>
-<button id="btnReset" class="btn-style">🗑️ Borrar Todo</button>
+    <div class="container">
+
+        <div class="left-panel">
+            <h2 style="margin-top:0; text-align:center;">📺 Registro de Animes</h2>
+
+            <div class="tabla-wrapper">
+                <table id="tablaAnimes">
+                    <thead>
+                        <tr>
+                            <th>Anime</th>
+                            <th>Estado</th>
+                            <th>Calificación</th>
+                            <th>Notas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="rightPanelWrapper" class="right-panel-wrapper">
+            <div class="right-panel">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    class="search-input"
+                                    placeholder="Buscar anime..."
+                                />
+                            </th>
+                            <th style="width:40px;">
+                                <button id="btnTheme" class="btn-theme">🌙</button>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <button id="btnAgregar" class="btn-primary">➕ Nuevo Anime</button>
+                <button id="btnCompartir" class="btn-style" style="background:#4caf50;">🔗 Compartir Enlace (Lectura)</button>
+
+                <div class="filters">
+                    <h4>Filtrar por Estado</h4>
+                    <div class="filter-group" id="filtroEstado">
+                        <button data-estado="todos" class="active">Todos</button>
+                        <button data-estado="Si">Si</button>
+                        <button data-estado="No">No</button>
+                        <button data-estado="Emisión">Emisión</button>
+                        <button data-estado="Abandonado">Abandonado</button>
+                        <button data-estado="Incompleto">Incompleto</button>
+                        <button data-estado="Empezado">Empezado</button>
+                    </div>
+
+                    <h4>Filtrar por Calificación</h4>
+                    <div class="filter-group" id="filtroCalificacion">
+                        <button data-calificacion="todos" class="active">Todos</button>
+                        <button data-calificacion="0">Pendiente</button>
+                        <button data-calificacion="1">⭐</button>
+                        <button data-calificacion="2">⭐⭐</button>
+                        <button data-calificacion="3">⭐⭐⭐</button>
+                        <button data-calificacion="4">⭐⭐⭐⭐</button>
+                        <button data-calificacion="5">⭐⭐⭐⭐⭐</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h4>Copia de Seguridad (Recomendado)</h4>
+                <button id="btnExportarJSON" class="btn-style" style="background:#673ab7;">📤 Exportar JSON</button>
+                
+                <button class="btn-style" style="background:#9c27b0;">
+                    <label style="cursor:pointer;">
+                        📥 Importar JSON
+                        <input type="file" id="inputJSON" accept=".json" hidden />
+                    </label>
+                </button>
+
+                <hr />
+                <h4>Compatibilidad</h4>
+                <button id="btnExportarCSV" class="btn-style">📤 Exportar CSV</button>
+
+                <button class="btn-style">
+                    <label style="cursor:pointer;">
+                        📄 Importar CSV (Excel)
+                        <input type="file" id="inputCSV" accept=".csv" hidden />
+                    </label>
+                </button>
+
+                <hr />
+                <button id="btnEliminarDuplicados" class="btn-style">🧹 Limpiar Duplicados</button>
+                <button id="btnReset" class="btn-style">🗑️ Borrar Todo</button>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modalTitle">Nuevo Anime</h3>
+            <form id="formAnime">
+                <input type="text" id="nombre" placeholder="Nombre del anime" required />
+
+                <select id="estado">
+                    <option value="No">No</option>
+                    <option value="Si">Si</option>
+                    <option value="Emisión">Emisión</option>
+                    <option value="Abandonado">Abandonado</option>
+                    <option value="Incompleto">Incompleto</option>
+                    <option value="Empezado">Empezado</option>
+                </select>
+
+                <select id="calificacion">
+                    <option value="0">Pendiente</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+
+                <textarea id="notas" placeholder="Notas adicionales..."></textarea>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <button type="button" id="cerrarModal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
