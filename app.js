@@ -11,11 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnAgregar = document.getElementById("btnAgregar");
     const btnCompartir = document.getElementById("btnCompartir");
     
-    // JSON
     const btnExportarJSON = document.getElementById("btnExportarJSON");
     const inputJSON = document.getElementById("inputJSON");
-    
-    // CSV
     const btnExportarCSV = document.getElementById("btnExportarCSV");
     const inputCSV = document.getElementById("inputCSV");
     
@@ -49,18 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const modoLectura = urlParams.get('view') === 'readonly';
     let animesCompartidos = [];
 
-    // Carga de datos externos si existen en la URL
     if (dataParam) {
         try {
             const decoded = decodeURIComponent(escape(atob(dataParam)));
             animesCompartidos = JSON.parse(decoded);
             if (modoLectura) {
                 body.classList.add("readonly-mode");
-                setTimeout(() => mostrarToast("📖 Modo Lectura: Datos externos"), 1000);
+                setTimeout(() => mostrarToast("📖 Viendo lista compartida"), 1000);
             }
         } catch (e) {
-            console.error("Error en data URL:", e);
-            mostrarToast("❌ Error al decodificar datos");
+            mostrarToast("❌ Error al cargar datos compartidos");
         }
     }
 
@@ -80,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const generarID = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
     /* =====================================================
-       UTILIDADES (TOAST Y MODAL)
+       UTILIDADES
     ===================================================== */
     const mostrarToast = mensaje => {
         toast.textContent = mensaje;
@@ -95,24 +90,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /* =====================================================
-       SISTEMA DE IMPORTACIÓN / EXPORTACIÓN JSON
+       JSON Y COMPARTIR
     ===================================================== */
     btnExportarJSON.onclick = () => {
         const animes = obtenerAnimes();
         if (!animes.length) return mostrarToast("⚠️ No hay datos");
-        
-        const dataStr = JSON.stringify(animes, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+        const blob = new Blob([JSON.stringify(animes, null, 2)], { type: "application/json" });
         const link = document.createElement("a");
-        link.href = url;
-        link.download = `backup_animes_${new Date().toISOString().slice(0,10)}.json`;
+        link.href = URL.createObjectURL(blob);
+        link.download = `backup_animes.json`;
         link.click();
-        mostrarToast("💾 Backup JSON descargado");
     };
 
     inputJSON.addEventListener("change", e => {
-        if (modoLectura) return;
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -122,34 +112,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (Array.isArray(importados) && confirm(`¿Importar ${importados.length} registros?`)) {
                     guardarAnimes(importados);
                     renderTabla();
-                    mostrarToast("✅ Datos JSON importados");
+                    mostrarToast("✅ JSON importado");
                 }
-            } catch (err) { mostrarToast("❌ JSON no válido"); }
-            inputJSON.value = "";
+            } catch (err) { mostrarToast("❌ Error en el archivo JSON"); }
         };
         reader.readAsText(file);
     });
 
-    /* =====================================================
-       COMPARTIR (LINK BASE64)
-    ===================================================== */
     btnCompartir.onclick = () => {
         const animes = obtenerAnimes();
         if (!animes.length) return mostrarToast("⚠️ Nada que compartir");
-        
         const base64 = btoa(unescape(encodeURIComponent(JSON.stringify(animes))));
         const url = `${window.location.origin}${window.location.pathname}?data=${base64}&view=readonly`;
-        
-        navigator.clipboard.writeText(url).then(() => {
-            mostrarToast("✅ Enlace copiado al portapapeles");
-        });
+        navigator.clipboard.writeText(url).then(() => mostrarToast("✅ Enlace de lectura copiado"));
     };
 
     /* =====================================================
-       SISTEMA CSV (EXCEL)
+       CSV (COMPATIBILIDAD EXCEL)
     ===================================================== */
-    const parseCSVLine = line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
-
     btnExportarCSV.onclick = () => {
         const animes = obtenerAnimes();
         let csv = "ANIME,ESTADO,NOTAS,CALIFICACION\n";
@@ -164,36 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
         link.click();
     };
 
-    inputCSV.addEventListener("change", e => {
-        if (modoLectura) return;
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = evt => {
-            const lines = evt.target.result.split(/\r?\n/).filter(l => l.trim());
-            let animes = obtenerAnimes();
-            lines.forEach((line, i) => {
-                const cols = parseCSVLine(line);
-                if (i === 0 && cols[0].toLowerCase().includes("anime")) return;
-                if (cols[0]) {
-                    animes.push({
-                        id: generarID(),
-                        nombre: cols[0],
-                        estado: cols[1] || "No",
-                        notas: cols[2] || "",
-                        calificacion: cols[3]?.includes("⭐") ? cols[3].length : 0
-                    });
-                }
-            });
-            guardarAnimes(animes);
-            renderTabla();
-            mostrarToast("📄 CSV importado");
-            inputCSV.value = "";
-        };
-        reader.readAsText(file);
-    });
-
     /* =====================================================
-       RENDERIZADO DE TABLA
+       RENDERIZADO DE TABLA (CORREGIDO PARA ESTRELLAS)
     ===================================================== */
     const renderTabla = () => {
         tablaBody.innerHTML = "";
@@ -201,10 +153,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (textoBusqueda) animes = animes.filter(a => a.nombre.toLowerCase().includes(textoBusqueda));
         if (filtroEstado !== "todos") animes = animes.filter(a => a.estado === filtroEstado);
-        if (filtroCalificacion !== "todos") animes = animes.filter(a => a.calificacion === Number(filtroCalificacion));
+        if (filtroCalificacion !== "todos") animes = animes.filter(a => Number(a.calificacion) === Number(filtroCalificacion));
 
         animes.forEach(anime => {
             const tr = document.createElement("tr");
+            
+            // Lógica corregida para mostrar estrellas
+            const numEstrellas = parseInt(anime.calificacion) || 0;
+            const estrellasHtml = numEstrellas > 0 ? "⭐".repeat(numEstrellas) : "Pendiente";
+
             const btnAcciones = modoLectura ? "" : `
                 <button class="btn-edit" data-id="${anime.id}">✏️</button>
                 <button class="btn-delete" data-id="${anime.id}">❌</button>
@@ -212,8 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             tr.innerHTML = `
                 <td><span class="titulo-anime copiar" data-texto="${anime.nombre}">${anime.nombre}</span></td>
-                <td class="estado-${anime.estado.toLowerCase()}">${anime.estado}</td>
-                <td>${anime.calificacion === 0 ? "Pendiente" : "⭐".repeat(anime.calificacion)}</td>
+                <td><span class="estado-${anime.estado.toLowerCase()}">${anime.estado}</span></td>
+                <td>${estrellasHtml}</td>
                 <td>${anime.notas || ""}</td>
                 <td>${btnAcciones}</td>
             `;
@@ -222,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /* =====================================================
-       CRUD Y EVENTOS
+       CRUD
     ==================================================== */
     form.onsubmit = e => {
         e.preventDefault();
@@ -232,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nombre: nombreInput.value.trim(),
             estado: estadoInput.value,
             notas: notasInput.value.trim(),
-            calificacion: Number(calificacionInput.value)
+            calificacion: parseInt(calificacionInput.value) || 0 // Asegura que sea número
         };
 
         if (editId) {
@@ -245,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
         guardarAnimes(animes);
         renderTabla();
         cerrarModalFn();
-        mostrarToast("✅ Guardado correctamente");
+        mostrarToast("✅ Guardado");
     };
 
     tablaBody.onclick = e => {
@@ -254,10 +211,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!id) return;
 
         if (e.target.classList.contains("btn-delete")) {
-            if (confirm("¿Eliminar este anime?")) {
+            if (confirm("¿Eliminar?")) {
                 guardarAnimes(obtenerAnimes().filter(a => a.id !== id));
                 renderTabla();
-                mostrarToast("🗑️ Eliminado");
             }
         }
 
@@ -273,16 +229,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Copiar al portapapeles (Doble clic o Click largo)
-    tablaBody.addEventListener("dblclick", e => {
-        if (e.target.classList.contains("copiar")) {
-            navigator.clipboard.writeText(e.target.dataset.texto);
-            mostrarToast("📋 Nombre copiado");
-        }
-    });
-
     /* =====================================================
-       FILTROS, TEMA Y UI
+       INTERFAZ Y TEMA
     ===================================================== */
     searchInput.oninput = e => { textoBusqueda = e.target.value.toLowerCase(); renderTabla(); };
 
@@ -301,28 +249,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     btnReset.onclick = () => {
-        if (confirm("¿Borrar TODOS tus datos locales?")) {
-            localStorage.removeItem("animes");
-            renderTabla();
-            mostrarToast("🗑️ Datos reseteados");
-        }
+        if (confirm("¿Borrar todo?")) { localStorage.removeItem("animes"); renderTabla(); }
     };
 
-    btnEliminarDuplicados.onclick = () => {
-        const animes = obtenerAnimes();
-        const map = new Map();
-        animes.forEach(a => map.set(a.nombre.toLowerCase().trim(), a));
-        guardarAnimes([...map.values()]);
-        renderTabla();
-        mostrarToast("🧹 Duplicados eliminados");
-    };
-
-    btnAgregar.onclick = () => { modal.classList.remove("hidden"); document.getElementById("modalTitle").textContent = "Nuevo Anime"; };
+    btnAgregar.onclick = () => { modal.classList.remove("hidden"); };
     cerrarModalBtn.onclick = cerrarModalFn;
 
     const aplicarTema = theme => {
         body.className = theme;
-        if (modoLectura) body.classList.add("readonly-mode"); // No perder modo lectura
+        if (modoLectura) body.classList.add("readonly-mode");
         btnTheme.textContent = theme === "dark" ? "🌙" : "☀️";
         localStorage.setItem("theme", theme);
     };
@@ -332,21 +267,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnHamburger.onclick = () => rightPanelWrapper.classList.toggle("show");
     
-    // Cerrar panel al hacer click fuera
-    document.onclick = e => {
-        if (!rightPanelWrapper.contains(e.target) && !btnHamburger.contains(e.target)) {
-            rightPanelWrapper.classList.remove("show");
-        }
-    };
-
-    /* =====================================================
-       INICIALIZACIÓN
-    ===================================================== */
-    const checkOrientation = () => {
-        orientationBlock.style.display = (window.innerWidth <= 900 && window.innerHeight > window.innerWidth) ? "flex" : "none";
-    };
-    window.onresize = checkOrientation;
-    
-    checkOrientation();
     renderTabla();
 });
