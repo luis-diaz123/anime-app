@@ -1,22 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* =====================================================
+    /* ===========================
        ELEMENTOS
-    ===================================================== */
+    ============================ */
     const body = document.body;
-
-    const btnTheme = document.getElementById("btnTheme");
-    const btnHamburger = document.getElementById("btnHamburger");
 
     const tablaBody = document.querySelector("#tablaAnimes tbody");
     const searchInput = document.getElementById("searchInput");
 
+    const btnTheme = document.getElementById("btnTheme");
+    const btnHamburger = document.getElementById("btnHamburger");
     const btnAgregar = document.getElementById("btnAgregar");
     const btnExportar = document.getElementById("btnExportarCSV");
     const btnEliminarDuplicados = document.getElementById("btnEliminarDuplicados");
     const btnReset = document.getElementById("btnReset");
-
-    const inputCSV = document.getElementById("inputCSV");
+    const btnShare = document.getElementById("btnShare");
 
     const modal = document.getElementById("modal");
     const cerrarModal = document.getElementById("cerrarModal");
@@ -31,21 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const filtrosCalificacion = document.querySelectorAll("#filtroCalificacion button");
 
     const toast = document.getElementById("toast");
-
     const rightPanelWrapper = document.getElementById("rightPanelWrapper");
     const orientationBlock = document.getElementById("orientationBlock");
 
-    /* =====================================================
+    /* ===========================
        VARIABLES
-    ===================================================== */
+    ============================ */
     let editId = null;
     let filtroEstado = "todos";
     let filtroCalificacion = "todos";
     let textoBusqueda = "";
 
-    /* =====================================================
+    /* ===========================
        STORAGE
-    ===================================================== */
+    ============================ */
     const obtenerAnimes = () =>
         JSON.parse(localStorage.getItem("animes")) || [];
 
@@ -55,43 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const generarID = () =>
         Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-    /* =====================================================
+    /* ===========================
        TOAST
-    ===================================================== */
-    function mostrarToast(mensaje) {
-        toast.textContent = mensaje;
+    ============================ */
+    function mostrarToast(msg) {
+        toast.textContent = msg;
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
-    /* =====================================================
-       CSV PARSER
-    ===================================================== */
-    function parseCSVLine(line) {
-        const result = [];
-        let current = "";
-        let inQuotes = false;
-
-        for (let char of line) {
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === "," && !inQuotes) {
-                result.push(current);
-                current = "";
-            } else current += char;
-        }
-
-        result.push(current);
-        return result.map(v => v.trim().replace(/^"|"$/g, ""));
-    }
-
-    /* =====================================================
+    /* ===========================
        MODAL
-    ===================================================== */
-    modal.classList.add("hidden");
+    ============================ */
+    function cerrarModalFn() {
+        modal.classList.add("hidden");
+        form.reset();
+        editId = null;
+    }
 
     btnAgregar.onclick = () => {
         modal.classList.remove("hidden");
-        document.getElementById("modalTitle").textContent = "Nuevo Anime";
         form.reset();
         editId = null;
         cerrarPanel();
@@ -99,15 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cerrarModal.onclick = cerrarModalFn;
 
-    function cerrarModalFn() {
-        modal.classList.add("hidden");
-        form.reset();
-        editId = null;
-    }
-
-    /* =====================================================
+    /* ===========================
        RENDER TABLA
-    ===================================================== */
+    ============================ */
     function renderTabla() {
         tablaBody.innerHTML = "";
 
@@ -133,9 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>
-                    <span class="titulo-anime copiar"
-                        title="${anime.nombre}"
-                        data-texto="${anime.nombre}">
+                    <span class="copiar" title="Doble click para copiar">
                         ${anime.nombre}
                     </span>
                 </td>
@@ -157,36 +129,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* =====================================================
+    /* ===========================
        COPIAR NOMBRE
-    ===================================================== */
+    ============================ */
     tablaBody.addEventListener("dblclick", e => {
         if (!e.target.classList.contains("copiar")) return;
-        navigator.clipboard.writeText(e.target.dataset.texto);
+        navigator.clipboard.writeText(e.target.textContent);
         mostrarToast("📋 Nombre copiado");
     });
 
-    let pressTimer;
-    tablaBody.addEventListener("touchstart", e => {
-        if (!e.target.classList.contains("copiar")) return;
-        pressTimer = setTimeout(() => {
-            navigator.clipboard.writeText(e.target.dataset.texto);
-            mostrarToast("📋 Nombre copiado");
-        }, 600);
-    });
-    tablaBody.addEventListener("touchend", () => clearTimeout(pressTimer));
-
-    /* =====================================================
+    /* ===========================
        BUSCADOR
-    ===================================================== */
+    ============================ */
     searchInput.addEventListener("input", e => {
         textoBusqueda = e.target.value.toLowerCase();
         renderTabla();
     });
 
-    /* =====================================================
+    /* ===========================
        GUARDAR / EDITAR
-    ===================================================== */
+    ============================ */
     form.addEventListener("submit", e => {
         e.preventDefault();
 
@@ -195,8 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
             id: editId || generarID(),
             nombre: nombreInput.value.trim(),
             estado: estadoInput.value,
-            notas: notasInput.value.trim(),
-            calificacion: Number(calificacionInput.value)
+            calificacion: Number(calificacionInput.value),
+            notas: notasInput.value.trim()
         };
 
         if (editId) {
@@ -211,69 +173,65 @@ document.addEventListener("DOMContentLoaded", () => {
         cerrarModalFn();
     });
 
-    /* =====================================================
+    /* ===========================
        EDITAR / ELIMINAR
-    ===================================================== */
+    ============================ */
     tablaBody.onclick = e => {
         const id = e.target.dataset.id;
         if (!id) return;
 
         const animes = obtenerAnimes();
+        const anime = animes.find(a => a.id === id);
 
         if (e.target.classList.contains("btn-delete")) {
-            if (!confirm("¿Eliminar este registro?")) return;
+            if (!confirm("¿Eliminar este anime?")) return;
             guardarAnimes(animes.filter(a => a.id !== id));
             renderTabla();
             mostrarToast("🗑️ Registro eliminado");
         }
 
         if (e.target.classList.contains("btn-edit")) {
-            const a = animes.find(x => x.id === id);
-            nombreInput.value = a.nombre;
-            estadoInput.value = a.estado;
-            calificacionInput.value = a.calificacion;
-            notasInput.value = a.notas;
+            nombreInput.value = anime.nombre;
+            estadoInput.value = anime.estado;
+            calificacionInput.value = anime.calificacion;
+            notasInput.value = anime.notas;
             editId = id;
             modal.classList.remove("hidden");
-            document.getElementById("modalTitle").textContent = "Editar Anime";
             cerrarPanel();
         }
     };
 
-    /* =====================================================
-       FILTROS (🔧 ARREGLADOS)
-    ===================================================== */
+    /* ===========================
+       FILTROS
+    ============================ */
     filtrosEstado.forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.onclick = () => {
             filtrosEstado.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             filtroEstado = btn.dataset.estado;
             renderTabla();
-        });
+        };
     });
 
     filtrosCalificacion.forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.onclick = () => {
             filtrosCalificacion.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             filtroCalificacion = btn.dataset.calificacion;
             renderTabla();
-        });
+        };
     });
 
-    /* =====================================================
-       EXPORTAR / IMPORTAR / RESET / DUPLICADOS
-    ===================================================== */
+    /* ===========================
+       EXPORTAR / DUPLICADOS / RESET
+    ============================ */
     btnExportar.onclick = () => {
         const animes = obtenerAnimes();
-        if (!animes.length) {
-            mostrarToast("⚠️ No hay datos");
-            return;
-        }
+        if (!animes.length) return mostrarToast("⚠️ No hay datos");
 
         let csv = "Anime,Estado,Notas,Calificacion\n";
         animes.forEach(a => {
-            csv += `"${a.nombre}","${a.estado}","${a.notas || ""}",${a.calificacion}\n`;
+            csv += `"${a.nombre}","${a.estado}","${a.notas}",${a.calificacion}\n`;
         });
 
         const blob = new Blob([csv], { type: "text/csv" });
@@ -286,47 +244,68 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     btnEliminarDuplicados.onclick = () => {
-        const animes = obtenerAnimes();
         const map = new Map();
-
-        animes.forEach(a => {
+        obtenerAnimes().forEach(a => {
             const key = a.nombre.toLowerCase().trim();
             if (!map.has(key)) map.set(key, a);
         });
-
         guardarAnimes([...map.values()]);
         renderTabla();
-        mostrarToast("🧹 Duplicados limpiados");
+        mostrarToast("🧹 Duplicados eliminados");
     };
 
     btnReset.onclick = () => {
-        if (!confirm("¿Eliminar todos los registros?")) return;
+        if (!confirm("¿Borrar todos los datos?")) return;
         localStorage.removeItem("animes");
         renderTabla();
-        mostrarToast("🗑️ Datos eliminados");
+        mostrarToast("🗑️ Datos borrados");
     };
 
-    /* =====================================================
-       TEMA DARK / LIGHT (✔ TABLA CORREGIDA)
-    ===================================================== */
-    function aplicarTema(theme) {
-        body.classList.remove("dark", "light");
-        body.classList.add(theme);
-        btnTheme.textContent = theme === "dark" ? "🌙" : "☀️";
-        localStorage.setItem("theme", theme);
-        renderTabla(); // 🔧 fuerza repintado de tabla
+    /* ===========================
+       COMPARTIR LISTA
+    ============================ */
+    btnShare.onclick = async () => {
+        const data = btoa(
+            encodeURIComponent(JSON.stringify(obtenerAnimes()))
+        );
+
+        const url = `${location.origin}${location.pathname}?shared=1&data=${data}`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: "Mi lista de animes",
+                    text: "Te comparto mi lista de animes",
+                    url
+                });
+            } catch {}
+        } else {
+            await navigator.clipboard.writeText(url);
+            mostrarToast("🔗 Link copiado al portapapeles");
+        }
+    };
+
+    /* ===========================
+       IMPORTAR DESDE LINK
+    ============================ */
+    const params = new URLSearchParams(location.search);
+    if (params.get("shared") === "1" && params.get("data")) {
+        try {
+            const data = JSON.parse(
+                decodeURIComponent(atob(params.get("data")))
+            );
+            guardarAnimes(data);
+            body.classList.add("shared");
+            mostrarToast("👁️ Vista compartida");
+            history.replaceState({}, "", location.pathname);
+        } catch {
+            mostrarToast("⚠️ Link inválido");
+        }
     }
 
-    btnTheme.onclick = () => {
-        const actual = body.classList.contains("dark") ? "dark" : "light";
-        aplicarTema(actual === "dark" ? "light" : "dark");
-    };
-
-    aplicarTema(localStorage.getItem("theme") || "dark");
-
-    /* =====================================================
-       PANEL DERECHO + ESC
-    ===================================================== */
+    /* ===========================
+       PANEL / TEMA
+    ============================ */
     function cerrarPanel() {
         rightPanelWrapper.classList.remove("show");
     }
@@ -336,24 +315,14 @@ document.addEventListener("DOMContentLoaded", () => {
         rightPanelWrapper.classList.toggle("show");
     };
 
-    document.addEventListener("click", e => {
-        if (
-            rightPanelWrapper.classList.contains("show") &&
-            !rightPanelWrapper.contains(e.target) &&
-            !btnHamburger.contains(e.target)
-        ) cerrarPanel();
-    });
+    btnTheme.onclick = () => {
+        body.classList.toggle("light");
+        body.classList.toggle("dark");
+    };
 
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") {
-            cerrarModalFn();
-            cerrarPanel();
-        }
-    });
-
-    /* =====================================================
+    /* ===========================
        ORIENTACIÓN
-    ===================================================== */
+    ============================ */
     function checkOrientation() {
         if (window.innerWidth <= 900 && window.innerHeight > window.innerWidth) {
             orientationBlock.style.display = "flex";
@@ -365,10 +334,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", checkOrientation);
     window.addEventListener("orientationchange", checkOrientation);
 
-    /* =====================================================
+    /* ===========================
        INIT
-    ===================================================== */
+    ============================ */
     checkOrientation();
     renderTabla();
-
 });
