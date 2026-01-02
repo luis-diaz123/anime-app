@@ -1,5 +1,5 @@
 /* ===============================
-    RESET
+    RESET Y BASE
 ================================ */
 * {
     box-sizing: border-box;
@@ -16,7 +16,7 @@ body {
 }
 
 /* ===============================
-    LAYOUT
+    LAYOUT PRINCIPAL
 ================================ */
 .container {
     display: grid;
@@ -24,9 +24,6 @@ body {
     height: 100vh;
 }
 
-/* ===============================
-    PANEL IZQUIERDO
-================================ */
 .left-panel {
     padding: 15px;
     overflow-y: scroll;
@@ -34,9 +31,6 @@ body {
     scrollbar-width: thin;
 }
 
-/* ===============================
-    PANEL DERECHO
-================================ */
 .right-panel-wrapper {
     height: 100%;
 }
@@ -46,14 +40,14 @@ body {
     background: #1e1e1e;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     height: 100%;
     overflow-y: auto;
     overscroll-behavior: contain;
 }
 
 /* ===============================
-    TABLA
+    TABLA DE ANIMES
 ================================ */
 #tablaAnimes {
     width: 100%;
@@ -78,65 +72,64 @@ body {
     text-overflow: ellipsis;
 }
 
-/* COLUMNAS */
-#tablaAnimes th:nth-child(1),
-#tablaAnimes td:nth-child(1) { width: 40%; }
-
-#tablaAnimes th:nth-child(2),
-#tablaAnimes td:nth-child(2) { width: 12%; text-align:center; }
-
-#tablaAnimes th:nth-child(3),
-#tablaAnimes td:nth-child(3) { width: 110px; text-align:center; }
-
-#tablaAnimes th:nth-child(4),
-#tablaAnimes td:nth-child(4) { width: 20%; white-space: normal; }
-
-#tablaAnimes th:nth-child(5),
-#tablaAnimes td:nth-child(5) { width: 100px; text-align:center; }
+/* Anchos de columna */
+#tablaAnimes th:nth-child(1), #tablaAnimes td:nth-child(1) { width: 40%; }
+#tablaAnimes th:nth-child(2), #tablaAnimes td:nth-child(2) { width: 12%; text-align:center; }
+#tablaAnimes th:nth-child(3), #tablaAnimes td:nth-child(3) { width: 110px; text-align:center; }
+#tablaAnimes th:nth-child(4), #tablaAnimes td:nth-child(4) { width: 20%; white-space: normal; }
+#tablaAnimes th:nth-child(5), #tablaAnimes td:nth-child(5) { width: 100px; text-align:center; }
 
 /* ===============================
-    BOTONES
+    BOTONES Y UI
 ================================ */
 button {
-    padding: 8px;
+    padding: 10px;
     background: #333;
     border: none;
     color: #fff;
     cursor: pointer;
     border-radius: 8px;
-    transition: background 0.2s;
+    font-weight: bold;
+    transition: transform 0.1s, background 0.2s;
 }
 
-button:hover { background:#444; }
+button:active { transform: scale(0.98); }
 
-.btn-primary { background:#ff4081; }
-.btn-style { background:#768ef8; }
-.btn-style:hover { background:#214afd; }
+.btn-primary { background: #ff4081; }
+.btn-primary:hover { background: #f50057; }
 
-/* Botón compartir verde */
-#btnCompartir {
-    background: #4caf50;
+.btn-style { background: #444; }
+
+/* Colores específicos para funciones */
+#btnCompartir { background: #4caf50; } /* Verde */
+#btnExportarJSON { background: #673ab7; } /* Púrpura */
+button:has(#inputJSON) { background: #9c27b0; } /* Púrpura claro */
+#btnExportarCSV, button:has(#inputCSV) { background: #3f51b5; } /* Azul */
+
+hr {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 10px 0;
+    width: 100%;
 }
-#btnCompartir:hover {
-    background: #388e3c;
+
+h4 {
+    margin: 5px 0;
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
 }
 
 /* ===============================
-    BUSCADOR Y FILTROS
+    FILTROS Y BUSCADOR
 ================================ */
 .search-input {
-    padding: 8px;
+    padding: 10px;
     width: 100%;
     background: #2a2a2a;
     border: 1px solid #444;
     color: #fff;
-    border-radius: 4px;
-}
-
-.filters h4 {
-    font-size: 13px;
-    color: #ccc;
-    margin-bottom: 8px;
+    border-radius: 8px;
 }
 
 .filter-group {
@@ -145,61 +138,61 @@ button:hover { background:#444; }
     gap: 5px;
 }
 
+.filter-group button {
+    padding: 5px 10px;
+    font-size: 11px;
+    background: #2a2a2a;
+}
+
 .filter-group button.active {
-    background:#ff4081;
+    background: #ff4081;
 }
 
 /* ===============================
-    MODAL
+    MODAL Y TOAST
 ================================ */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.75);
+    background: rgba(0,0,0,0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 3000;
 }
 
-.modal.hidden { display:none; }
+.modal.hidden { display: none; }
 
 .modal-content {
-    background:#1e1e1e;
-    padding:20px;
-    width:340px;
-    border-radius:12px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+    background: #1e1e1e;
+    padding: 25px;
+    width: 350px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.modal-content input,
-.modal-content select,
-.modal-content textarea {
-    background:#2a2a2a;
-    border:none;
-    border-radius:8px;
-    padding:10px;
-    color:#fff;
+.modal-content input, .modal-content select, .modal-content textarea {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    padding: 10px;
+    color: #fff;
+    border-radius: 8px;
 }
 
-/* ===============================
-    TOAST
-================================ */
 .toast {
     position: fixed;
-    bottom: 25px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background: #323232;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 12px;
+    background: #4caf50;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
     opacity: 0;
-    transition: all .4s ease;
-    z-index: 4000;
-    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 9999;
 }
 
 .toast.show {
@@ -208,107 +201,56 @@ button:hover { background:#444; }
 }
 
 /* ===============================
-    ESTADOS COLORES
+    ESTADOS DE COLORES (FILAS)
 ================================ */
-.estado-si { background:#1b5e20; }
-.estado-no { background:#b71c1c; }
-.estado-emision, .estado-emisión { background:#006064; }
-.estado-abandonado { background:#4a148c; }
-.estado-incompleto { background:#f9a825; color:#000; }
-.estado-empezado { background:#424242; }
+.estado-si { background: #1b5e20; }
+.estado-no { background: #b71c1c; }
+.estado-emision, .estado-emisión { background: #006064; }
+.estado-abandonado { background: #4a148c; }
+.estado-incompleto { background: #f57f17; color: #000; }
+.estado-empezado { background: #455a64; }
 
 /* ===============================
-    HAMBURGER Y RESPONSIVE
+    MODO LECTURA
 ================================ */
-.btn-hamburger {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: #ff4081;
-    color: #fff;
-    font-size: 22px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    z-index: 3500;
-}
-
-@media (max-width:900px) {
-    .container { grid-template-columns:1fr; }
-    .btn-hamburger { display:block; }
-    .right-panel-wrapper {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 280px;
-        height: 100vh;
-        background: #1e1e1e;
-        transform: translateX(100%);
-        transition: transform .3s ease;
-        z-index: 2500;
-    }
-    .right-panel-wrapper.show { transform: translateX(0); }
-}
-
-/* ===============================
-    BLOQUEO ORIENTACIÓN
-================================ */
-#orientationBlock {
-    position: fixed;
-    inset: 0;
-    background: #2a2a2a;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 5000;
-}
-
-@media (max-width:900px) and (orientation:portrait) {
-    .container, .btn-hamburger, .modal, .toast { visibility: hidden; }
-    #orientationBlock { display:flex; }
-}
-
-/* ===============================
-    TEMA CLARO
-================================ */
-body.light { background:#f4f4f4; color:#000; }
-body.light #tablaAnimes { background:#fff; }
-body.light #tablaAnimes th { background:#e0e0e0; }
-body.light .right-panel { background:#fff; color:#000; }
-body.light button { background:#ddd; color:#000; }
-body.light .btn-primary { background:#1976d2; color:#fff; }
-
-/* ===============================
-    MODO LECTURA (NUEVO)
-================================ */
-body.readonly-mode .btn-edit,
-body.readonly-mode .btn-delete,
 body.readonly-mode #btnAgregar,
-body.readonly-mode #btnReset,
-body.readonly-mode #btnEliminarDuplicados,
 body.readonly-mode #btnCompartir,
+body.readonly-mode #btnExportarJSON,
+body.readonly-mode button:has(#inputJSON),
+body.readonly-mode #btnExportarCSV,
+body.readonly-mode button:has(#inputCSV),
+body.readonly-mode #btnEliminarDuplicados,
+body.readonly-mode #btnReset,
 body.readonly-mode hr,
-body.readonly-mode .btn-style:has(input[type="file"]), /* Botón importar */
-body.readonly-mode #btnExportarCSV {
+body.readonly-mode h4,
+body.readonly-mode .btn-edit,
+body.readonly-mode .btn-delete {
     display: none !important;
 }
 
-/* Ocultamos la columna de acciones en la tabla */
 body.readonly-mode #tablaAnimes th:nth-child(5),
 body.readonly-mode #tablaAnimes td:nth-child(5) {
     display: none;
 }
 
-/* Ajustamos el ancho de las otras columnas para compensar */
 body.readonly-mode #tablaAnimes th:nth-child(1),
 body.readonly-mode #tablaAnimes td:nth-child(1) {
     width: 50%;
 }
 
-/* Indicador visual de que es modo lectura */
-body.readonly-mode h2::after {
-    content: " (Solo Lectura)";
-    font-size: 12px;
-    color: #ff4081;
-    display: block;
+/* ===============================
+    RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; }
+    .btn-hamburger { display: block; position: fixed; top: 15px; left: 15px; z-index: 4000; font-size: 24px; padding: 10px; border-radius: 50%; width: 50px; height: 50px;}
+    
+    .right-panel-wrapper {
+        position: fixed;
+        right: 0; top: 0; height: 100vh; width: 280px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 3500;
+    }
+    .right-panel-wrapper.show { transform: translateX(0); }
 }
