@@ -25,14 +25,12 @@
         <!-- PANEL IZQUIERDO -->
         <div class="left-panel">
 
-            <!-- TÍTULO -->
-            <h2 style="margin-top: 0;">📺 Registro de Animes</h2>
+            <h2 style="margin-top:0;">📺 Registro de Animes</h2>
 
-            <!-- TABLA -->
             <div class="tabla-wrapper">
                 <table id="tablaAnimes">
                     <thead>
-                        <tr id="prueba">
+                        <tr>
                             <th>Anime</th>
                             <th>Estado</th>
                             <th>Calificación</th>
@@ -114,6 +112,9 @@
                 <button id="btnEliminarDuplicados" class="btn-style">🧹 Eliminar duplicados</button>
                 <button id="btnReset" class="btn-style">🗑️ Borrar todos</button>
 
+                <!-- COMPARTIR -->
+                <button id="btnShare" class="btn-style">🔗 Compartir</button>
+
             </div>
         </div>
     </div>
@@ -125,12 +126,7 @@
             <h3 id="modalTitle">Nuevo Anime</h3>
 
             <form id="formAnime">
-                <input
-                    type="text"
-                    id="nombre"
-                    placeholder="Nombre del anime"
-                    required
-                />
+                <input type="text" id="nombre" placeholder="Nombre del anime" required />
 
                 <select id="estado">
                     <option value="No">No</option>
@@ -164,7 +160,6 @@
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
-    <!-- JS -->
     <script src="app.js"></script>
 </body>
 </html>
