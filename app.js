@@ -1,8 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-    /* =====================================================
-       ELEMENTOS DEL DOM
-    ===================================================== */
     const body = document.body;
     const btnTheme = document.getElementById("btnTheme");
     const btnHamburger = document.getElementById("btnHamburger");
@@ -10,37 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchInput");
     const btnAgregar = document.getElementById("btnAgregar");
     const btnCompartir = document.getElementById("btnCompartir");
-    
     const btnExportarJSON = document.getElementById("btnExportarJSON");
     const inputJSON = document.getElementById("inputJSON");
     const btnExportarCSV = document.getElementById("btnExportarCSV");
     const inputCSV = document.getElementById("inputCSV");
-    
-    const btnEliminarDuplicados = document.getElementById("btnEliminarDuplicados");
     const btnReset = document.getElementById("btnReset");
     const modal = document.getElementById("modal");
     const cerrarModalBtn = document.getElementById("cerrarModal");
     const form = document.getElementById("formAnime");
-    
     const nombreInput = document.getElementById("nombre");
     const estadoInput = document.getElementById("estado");
     const calificacionInput = document.getElementById("calificacion");
     const notasInput = document.getElementById("notas");
-    
     const filtrosEstado = document.querySelectorAll("#filtroEstado button");
     const filtrosCalificacion = document.querySelectorAll("#filtroCalificacion button");
     const toast = document.getElementById("toast");
     const rightPanelWrapper = document.getElementById("rightPanelWrapper");
-    const orientationBlock = document.getElementById("orientationBlock");
 
-    /* =====================================================
-       VARIABLES DE ESTADO Y PARÁMETROS URL
-    ===================================================== */
     let editId = null;
     let filtroEstado = "todos";
     let filtroCalificacion = "todos";
     let textoBusqueda = "";
 
+    // Detección de Parámetros URL
     const urlParams = new URLSearchParams(window.location.search);
     const dataParam = urlParams.get('data');
     const modoLectura = urlParams.get('view') === 'readonly';
@@ -50,103 +38,61 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const decoded = decodeURIComponent(escape(atob(dataParam)));
             animesCompartidos = JSON.parse(decoded);
-            if (modoLectura) {
-                body.classList.add("readonly-mode");
-                setTimeout(() => mostrarToast("📖 Viendo lista compartida"), 1000);
-            }
+            if (modoLectura) body.classList.add("readonly-mode");
         } catch (e) {
-            mostrarToast("❌ Error al cargar datos compartidos");
+            console.error("Error decodificando URL", e);
         }
     }
 
-    /* =====================================================
-       GESTIÓN DE STORAGE
-    ===================================================== */
+    /* --- GESTIÓN DE DATOS --- */
     const obtenerAnimes = () => {
         if (dataParam && animesCompartidos.length > 0) return animesCompartidos;
-        return JSON.parse(localStorage.getItem("animes")) || [];
+        let locales = JSON.parse(localStorage.getItem("animes")) || [];
+        // Normalizamos los datos para asegurar que la calificación sea número
+        return locales.map(a => ({...a, calificacion: parseInt(a.calificacion) || 0}));
     };
 
     const guardarAnimes = data => {
-        if (modoLectura) return; 
+        if (modoLectura) return;
         localStorage.setItem("animes", JSON.stringify(data));
     };
 
-    const generarID = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
-
-    /* =====================================================
-       UTILIDADES
-    ===================================================== */
-    const mostrarToast = mensaje => {
-        toast.textContent = mensaje;
+    const mostrarToast = msg => {
+        toast.textContent = msg;
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 3000);
     };
 
-    const cerrarModalFn = () => {
-        modal.classList.add("hidden");
-        form.reset();
-        editId = null;
-    };
-
-    /* =====================================================
-       JSON Y COMPARTIR
-    ===================================================== */
+    /* --- FUNCIONES DE IMPORTACIÓN / EXPORTACIÓN --- */
     btnExportarJSON.onclick = () => {
-        const animes = obtenerAnimes();
-        if (!animes.length) return mostrarToast("⚠️ No hay datos");
-        const blob = new Blob([JSON.stringify(animes, null, 2)], { type: "application/json" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `backup_animes.json`;
-        link.click();
+        const data = obtenerAnimes();
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mis_animes.json";
+        a.click();
     };
 
-    inputJSON.addEventListener("change", e => {
-        const file = e.target.files[0];
-        if (!file) return;
+    inputJSON.onchange = e => {
         const reader = new FileReader();
-        reader.onload = evt => {
-            try {
-                const importados = JSON.parse(evt.target.result);
-                if (Array.isArray(importados) && confirm(`¿Importar ${importados.length} registros?`)) {
-                    guardarAnimes(importados);
-                    renderTabla();
-                    mostrarToast("✅ JSON importado");
-                }
-            } catch (err) { mostrarToast("❌ Error en el archivo JSON"); }
+        reader.onload = f => {
+            const data = JSON.parse(f.target.result);
+            guardarAnimes(data);
+            renderTabla();
+            mostrarToast("✅ JSON Importado");
         };
-        reader.readAsText(file);
-    });
+        reader.readAsText(e.target.files[0]);
+    };
 
     btnCompartir.onclick = () => {
-        const animes = obtenerAnimes();
-        if (!animes.length) return mostrarToast("⚠️ Nada que compartir");
-        const base64 = btoa(unescape(encodeURIComponent(JSON.stringify(animes))));
-        const url = `${window.location.origin}${window.location.pathname}?data=${base64}&view=readonly`;
-        navigator.clipboard.writeText(url).then(() => mostrarToast("✅ Enlace de lectura copiado"));
+        const data = btoa(unescape(encodeURIComponent(JSON.stringify(obtenerAnimes()))));
+        const url = `${window.location.origin}${window.location.pathname}?data=${data}&view=readonly`;
+        navigator.clipboard.writeText(url);
+        mostrarToast("🔗 Enlace de lectura copiado");
     };
 
-    /* =====================================================
-       CSV (COMPATIBILIDAD EXCEL)
-    ===================================================== */
-    btnExportarCSV.onclick = () => {
-        const animes = obtenerAnimes();
-        let csv = "ANIME,ESTADO,NOTAS,CALIFICACION\n";
-        animes.forEach(a => {
-            const cal = a.calificacion === 0 ? "Pendiente" : "⭐".repeat(a.calificacion);
-            csv += `"${a.nombre}","${a.estado}","${a.notas || ""}","${cal}"\n`;
-        });
-        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "lista_animes.csv";
-        link.click();
-    };
-
-    /* =====================================================
-       RENDERIZADO DE TABLA (CORREGIDO PARA ESTRELLAS)
-    ===================================================== */
+    /* --- RENDERIZADO (CORRECCIÓN DE ESTRELLAS) --- */
     const renderTabla = () => {
         tablaBody.innerHTML = "";
         let animes = obtenerAnimes();
@@ -158,11 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
         animes.forEach(anime => {
             const tr = document.createElement("tr");
             
-            // Lógica corregida para mostrar estrellas
-            const numEstrellas = parseInt(anime.calificacion) || 0;
-            const estrellasHtml = numEstrellas > 0 ? "⭐".repeat(numEstrellas) : "Pendiente";
+            // Forzar calificación a número para repetir estrellas
+            const num = parseInt(anime.calificacion) || 0;
+            const estrellas = num > 0 ? "⭐".repeat(num) : "Pendiente";
 
-            const btnAcciones = modoLectura ? "" : `
+            const acciones = modoLectura ? "" : `
                 <button class="btn-edit" data-id="${anime.id}">✏️</button>
                 <button class="btn-delete" data-id="${anime.id}">❌</button>
             `;
@@ -170,53 +116,47 @@ document.addEventListener("DOMContentLoaded", () => {
             tr.innerHTML = `
                 <td><span class="titulo-anime copiar" data-texto="${anime.nombre}">${anime.nombre}</span></td>
                 <td><span class="estado-${anime.estado.toLowerCase()}">${anime.estado}</span></td>
-                <td>${estrellasHtml}</td>
+                <td style="color: #ffca28; font-weight: bold;">${estrellas}</td>
                 <td>${anime.notas || ""}</td>
-                <td>${btnAcciones}</td>
+                <td>${acciones}</td>
             `;
             tablaBody.appendChild(tr);
         });
     };
 
-    /* =====================================================
-       CRUD
-    ==================================================== */
+    /* --- CRUD --- */
     form.onsubmit = e => {
         e.preventDefault();
-        let animes = obtenerAnimes();
-        const data = {
-            id: editId || generarID(),
+        let list = obtenerAnimes();
+        const nuevo = {
+            id: editId || Date.now().toString(),
             nombre: nombreInput.value.trim(),
             estado: estadoInput.value,
             notas: notasInput.value.trim(),
-            calificacion: parseInt(calificacionInput.value) || 0 // Asegura que sea número
+            calificacion: parseInt(calificacionInput.value) || 0
         };
 
         if (editId) {
-            const idx = animes.findIndex(a => a.id === editId);
-            animes[idx] = data;
+            const i = list.findIndex(a => a.id === editId);
+            list[i] = nuevo;
         } else {
-            animes.unshift(data);
+            list.unshift(nuevo);
         }
 
-        guardarAnimes(animes);
+        guardarAnimes(list);
         renderTabla();
-        cerrarModalFn();
-        mostrarToast("✅ Guardado");
+        modal.classList.add("hidden");
+        form.reset();
+        editId = null;
     };
 
     tablaBody.onclick = e => {
-        if (modoLectura) return;
         const id = e.target.dataset.id;
         if (!id) return;
-
         if (e.target.classList.contains("btn-delete")) {
-            if (confirm("¿Eliminar?")) {
-                guardarAnimes(obtenerAnimes().filter(a => a.id !== id));
-                renderTabla();
-            }
+            guardarAnimes(obtenerAnimes().filter(a => a.id !== id));
+            renderTabla();
         }
-
         if (e.target.classList.contains("btn-edit")) {
             const a = obtenerAnimes().find(x => x.id === id);
             editId = id;
@@ -225,47 +165,39 @@ document.addEventListener("DOMContentLoaded", () => {
             calificacionInput.value = a.calificacion;
             notasInput.value = a.notas;
             modal.classList.remove("hidden");
-            document.getElementById("modalTitle").textContent = "Editar Anime";
         }
     };
 
-    /* =====================================================
-       INTERFAZ Y TEMA
-    ===================================================== */
-    searchInput.oninput = e => { textoBusqueda = e.target.value.toLowerCase(); renderTabla(); };
-
-    filtrosEstado.forEach(btn => btn.onclick = () => {
-        filtrosEstado.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        filtroEstado = btn.dataset.estado;
-        renderTabla();
-    });
-
-    filtrosCalificacion.forEach(btn => btn.onclick = () => {
-        filtrosCalificacion.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        filtroCalificacion = btn.dataset.calificacion;
-        renderTabla();
-    });
-
-    btnReset.onclick = () => {
-        if (confirm("¿Borrar todo?")) { localStorage.removeItem("animes"); renderTabla(); }
-    };
-
-    btnAgregar.onclick = () => { modal.classList.remove("hidden"); };
-    cerrarModalBtn.onclick = cerrarModalFn;
-
-    const aplicarTema = theme => {
-        body.className = theme;
+    /* --- UI Y TEMA --- */
+    btnTheme.onclick = () => {
+        const nuevoTema = body.classList.contains("dark") ? "light" : "dark";
+        body.className = nuevoTema;
         if (modoLectura) body.classList.add("readonly-mode");
-        btnTheme.textContent = theme === "dark" ? "🌙" : "☀️";
-        localStorage.setItem("theme", theme);
+        localStorage.setItem("theme", nuevoTema);
     };
-
-    btnTheme.onclick = () => aplicarTema(body.classList.contains("dark") ? "light" : "dark");
-    aplicarTema(localStorage.getItem("theme") || "dark");
 
     btnHamburger.onclick = () => rightPanelWrapper.classList.toggle("show");
-    
+    btnAgregar.onclick = () => modal.classList.remove("hidden");
+    cerrarModalBtn.onclick = () => modal.classList.add("hidden");
+
+    // Filtros
+    filtrosEstado.forEach(b => b.onclick = () => {
+        filtrosEstado.forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        filtroEstado = b.dataset.estado;
+        renderTabla();
+    });
+
+    filtrosCalificacion.forEach(b => b.onclick = () => {
+        filtrosCalificacion.forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        filtroCalificacion = b.dataset.calificacion;
+        renderTabla();
+    });
+
+    searchInput.oninput = e => { textoBusqueda = e.target.value.toLowerCase(); renderTabla(); };
+
+    // Iniciar
+    body.classList.add(localStorage.getItem("theme") || "dark");
     renderTabla();
 });
