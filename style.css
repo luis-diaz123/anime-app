@@ -1,5 +1,5 @@
 /* ===============================
-    RESET Y BASE
+    1. RESET Y BASE
 ================================ */
 * {
     box-sizing: border-box;
@@ -7,7 +7,7 @@
 
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     background: #121212;
     color: #fff;
     overflow-x: hidden;
@@ -16,7 +16,7 @@ body {
 }
 
 /* ===============================
-    LAYOUT PRINCIPAL
+    2. LAYOUT PRINCIPAL
 ================================ */
 .container {
     display: grid;
@@ -25,14 +25,15 @@ body {
 }
 
 .left-panel {
-    padding: 15px;
-    overflow-y: scroll;
-    scrollbar-color: #888 transparent;
+    padding: 20px;
+    overflow-y: auto;
     scrollbar-width: thin;
+    scrollbar-color: #444 transparent;
 }
 
 .right-panel-wrapper {
     height: 100%;
+    border-left: 1px solid #333;
 }
 
 .right-panel {
@@ -43,28 +44,32 @@ body {
     gap: 12px;
     height: 100%;
     overflow-y: auto;
-    overscroll-behavior: contain;
 }
 
 /* ===============================
-    TABLA DE ANIMES
+    3. TABLA DE ANIMES
 ================================ */
 #tablaAnimes {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
     background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 #tablaAnimes th {
-    background: #222;
-    padding: 10px;
+    background: #252525;
+    padding: 12px;
     font-size: 14px;
     text-align: left;
+    color: #ff4081;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 #tablaAnimes td {
-    padding: 12px 8px; /* Un poco más de aire para las estrellas */
+    padding: 12px;
     border-bottom: 1px solid #2a2a2a;
     font-size: 14px;
     white-space: nowrap;
@@ -74,13 +79,13 @@ body {
 
 /* Anchos de columna */
 #tablaAnimes th:nth-child(1), #tablaAnimes td:nth-child(1) { width: 35%; }
-#tablaAnimes th:nth-child(2), #tablaAnimes td:nth-child(2) { width: 15%; text-align:center; }
-#tablaAnimes th:nth-child(3), #tablaAnimes td:nth-child(3) { width: 125px; text-align:center; color: #ffca28; } /* Estrellas doradas */
+#tablaAnimes th:nth-child(2), #tablaAnimes td:nth-child(2) { width: 15%; text-align: center; }
+#tablaAnimes th:nth-child(3), #tablaAnimes td:nth-child(3) { width: 130px; text-align: center; } /* Calificación */
 #tablaAnimes th:nth-child(4), #tablaAnimes td:nth-child(4) { width: 25%; white-space: normal; }
-#tablaAnimes th:nth-child(5), #tablaAnimes td:nth-child(5) { width: 100px; text-align:center; }
+#tablaAnimes th:nth-child(5), #tablaAnimes td:nth-child(5) { width: 100px; text-align: center; }
 
 /* ===============================
-    BOTONES Y UI
+    4. BOTONES Y ACCIONES
 ================================ */
 button {
     padding: 10px;
@@ -90,54 +95,82 @@ button {
     cursor: pointer;
     border-radius: 8px;
     font-weight: bold;
-    transition: transform 0.1s, background 0.2s;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-button:active { transform: scale(0.98); }
+button:hover { filter: brightness(1.2); }
+button:active { transform: scale(0.95); }
 
-.btn-primary { background: #ff4081; }
-.btn-primary:hover { background: #f50057; }
+.btn-primary { background: #ff4081; color: white; width: 100%; }
+.btn-style { background: #444; width: 100%; }
 
-.btn-style { background: #444; }
-
-/* Colores específicos para funciones */
+/* Botones con colores específicos */
 #btnCompartir { background: #4caf50; }
 #btnExportarJSON { background: #673ab7; }
 button:has(#inputJSON) { background: #9c27b0; }
 #btnExportarCSV, button:has(#inputCSV) { background: #3f51b5; }
 
-hr {
-    border: 0;
-    border-top: 1px solid #333;
-    margin: 10px 0;
-    width: 100%;
-}
+.btn-edit { background: transparent; color: #ffca28; font-size: 18px; display: inline-block; padding: 5px; }
+.btn-delete { background: transparent; color: #ff5252; font-size: 18px; display: inline-block; padding: 5px; }
 
-h4 {
-    margin: 5px 0;
+/* ===============================
+    5. ESTADOS Y CALIFICACIÓN
+================================ */
+/* Estilos de las etiquetas de estado */
+[class^="estado-"] {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
     font-size: 12px;
-    color: #888;
+    font-weight: bold;
     text-transform: uppercase;
+    min-width: 80px;
+}
+
+.estado-si { background: #2e7d32; color: #fff; }
+.estado-no { background: #c62828; color: #fff; }
+.estado-emision, .estado-emisión { background: #00838f; color: #fff; }
+.estado-abandonado { background: #4527a0; color: #fff; }
+.estado-incompleto { background: #ef6c00; color: #fff; }
+.estado-empezado { background: #424242; color: #fff; }
+
+/* Calificación (Estrellas) */
+#tablaAnimes td:nth-child(3) {
+    font-size: 16px;
+    letter-spacing: 2px;
 }
 
 /* ===============================
-    MENÚ HAMBURGUESA (CORREGIDO)
+    6. ELEMENTOS DE UI (BUSCADOR, TEMA, MODAL)
 ================================ */
+.search-input {
+    padding: 10px;
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 8px;
+    outline: none;
+}
+
+.search-input:focus { border-color: #ff4081; }
+
 .btn-hamburger {
-    display: none; /* OCULTO POR DEFECTO EN PC */
+    display: none; /* OCULTO EN COMPUTADORA */
 }
 
-/* ===============================
-    MODAL Y TOAST
-================================ */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 3000;
+    z-index: 5000;
 }
 
 .modal.hidden { display: none; }
@@ -145,19 +178,13 @@ h4 {
 .modal-content {
     background: #1e1e1e;
     padding: 25px;
-    width: 350px;
+    width: 90%;
+    max-width: 400px;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-}
-
-.modal-content input, .modal-content select, .modal-content textarea {
-    background: #2a2a2a;
-    border: 1px solid #444;
-    padding: 10px;
-    color: #fff;
-    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .toast {
@@ -171,26 +198,13 @@ h4 {
     border-radius: 50px;
     opacity: 0;
     transition: all 0.3s ease;
-    z-index: 9999;
+    z-index: 6000;
 }
 
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ===============================
-    ESTADOS DE COLORES (FILAS)
-================================ */
-.estado-si { background: #1b5e20; border-radius: 4px; padding: 2px 6px; }
-.estado-no { background: #b71c1c; border-radius: 4px; padding: 2px 6px; }
-.estado-emision, .estado-emisión { background: #006064; border-radius: 4px; padding: 2px 6px; }
-.estado-abandonado { background: #4a148c; border-radius: 4px; padding: 2px 6px; }
-.estado-incompleto { background: #f57f17; color: #000; border-radius: 4px; padding: 2px 6px; }
-.estado-empezado { background: #455a64; border-radius: 4px; padding: 2px 6px; }
-
-/* ===============================
-    MODO LECTURA
+    7. MODO LECTURA (HIDDEN ELEMENTS)
 ================================ */
 body.readonly-mode #btnAgregar,
 body.readonly-mode #btnCompartir,
@@ -198,18 +212,14 @@ body.readonly-mode #btnExportarJSON,
 body.readonly-mode button:has(#inputJSON),
 body.readonly-mode #btnExportarCSV,
 body.readonly-mode button:has(#inputCSV),
-body.readonly-mode #btnEliminarDuplicados,
 body.readonly-mode #btnReset,
 body.readonly-mode hr,
 body.readonly-mode h4,
 body.readonly-mode .btn-edit,
-body.readonly-mode .btn-delete {
-    display: none !important;
-}
-
+body.readonly-mode .btn-delete,
 body.readonly-mode #tablaAnimes th:nth-child(5),
 body.readonly-mode #tablaAnimes td:nth-child(5) {
-    display: none;
+    display: none !important;
 }
 
 body.readonly-mode #tablaAnimes th:nth-child(1),
@@ -218,40 +228,50 @@ body.readonly-mode #tablaAnimes td:nth-child(1) {
 }
 
 /* ===============================
-    RESPONSIVE (MÓVIL)
+    8. RESPONSIVE (MÓVIL)
 ================================ */
 @media (max-width: 900px) {
     .container { grid-template-columns: 1fr; }
-    
+
     .btn-hamburger { 
         display: block; /* APARECE SOLO EN MÓVIL */
-        position: fixed; 
-        top: 15px; 
-        left: 15px; 
-        z-index: 4000; 
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 4500;
         background: #ff4081;
-        color: white;
-        border: none;
-        font-size: 24px; 
-        padding: 10px; 
-        border-radius: 8px; 
-        width: 50px; 
-        height: 50px;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
-    
+
     .right-panel-wrapper {
         position: fixed;
-        right: 0; top: 0; height: 100vh; width: 280px;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        width: 280px;
+        background: #1e1e1e;
         transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 3500;
-        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+        transition: transform 0.3s ease-in-out;
+        z-index: 4000;
     }
-    
-    .right-panel-wrapper.show { transform: translateX(0); }
-    
-    /* En móvil, las estrellas pueden verse más pequeñas si es necesario */
-    #tablaAnimes td:nth-child(3) { font-size: 12px; }
+
+    .right-panel-wrapper.show {
+        transform: translateX(0);
+        box-shadow: -5px 0 20px rgba(0,0,0,0.8);
+    }
+
+    .left-panel { padding-top: 70px; }
 }
+
+/* ===============================
+    9. TEMA CLARO
+================================ */
+body.light { background: #f0f2f5; color: #1c1e21; }
+body.light .right-panel { background: #ffffff; }
+body.light #tablaAnimes { background: #ffffff; color: #1c1e21; }
+body.light #tablaAnimes th { background: #e4e6eb; color: #ff4081; }
+body.light .search-input { background: #ffffff; border-color: #ddd; color: #000; }
+body.light button:not(.btn-primary) { background: #e4e6eb; color: #000; }
