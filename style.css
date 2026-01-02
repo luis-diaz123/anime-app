@@ -29,7 +29,9 @@ body {
 ================================ */
 .left-panel {
     padding: 15px;
-    overflow-y: auto;
+    overflow-y: scroll;
+     scrollbar-color: #888 transparent;
+    scrollbar-width: thin;
 }
 
 /* ===============================
@@ -48,7 +50,6 @@ body {
     height: 100%;
     overflow-y: auto;
     overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
 }
 
 /* ===============================
@@ -167,6 +168,7 @@ button:hover { background:#444; }
     background:#2a2a2a;
     border:none;
     border-radius:8px;
+    margin: 10px;
     padding:8px;
     color:#fff;
 }
@@ -333,52 +335,19 @@ body.light .btn-primary {
 body.light .btn-hamburger {
     background:#1976d2;
 }
-
-/* ===============================
-   BOTÓN COMPARTIR
-================================ */
-#btnShare {
-    background: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.2s ease, transform 0.15s ease;
-}
-
-#btnShare:hover {
-    background: #43a047;
-    transform: scale(1.05);
-}
-
-#btnShare:active {
-    transform: scale(0.95);
-}
-
-body.light #btnShare {
-    background: #2e7d32;
-}
-
-body.light #btnShare:hover {
-    background: #1b5e20;
-}
-
-/* ===============================
-   VISTA COMPARTIDA
-================================ */
-body.shared #btnAgregar,
-body.shared #btnExportarCSV,
-body.shared #inputCSV,
-body.shared #btnEliminarDuplicados,
-body.shared #btnReset,
-body.shared .btn-edit,
-body.shared .btn-delete,
-body.shared #btnShare {
+/* Ocultar elementos en modo lectura */
+body.readonly-mode #btnAgregar,
+body.readonly-mode #btnReset,
+body.readonly-mode #btnEliminarDuplicados,
+body.readonly-mode label[for="inputCSV"], /* Botón importar */
+body.readonly-mode .btn-style:nth-of-type(2), /* Selector de archivo */
+body.readonly-mode #btnCompartir {
     display: none !important;
 }
 
-body.shared {
-    user-select: text;
+/* Ajustar la columna de acciones si está vacía */
+body.readonly-mode #tablaAnimes th:last-child,
+body.readonly-mode #tablaAnimes td:last-child {
+    width: 0;
+    display: none;
 }
