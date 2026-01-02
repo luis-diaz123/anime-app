@@ -5,31 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro de Animes</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Icono de la app / favicon -->
-<link rel="icon" type="image/png" href="ICONO.png" />
-<!-- Icono para iOS / Android -->
-<link rel="apple-touch-icon" sizes="512x512" href="ICONO.png">
-
+    <link rel="icon" type="image/png" href="ICONO.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="ICONO.png">
 </head>
 
 <body class="dark">
 
-    <!-- BLOQUEO ORIENTACIÓN -->
     <div id="orientationBlock">
         <div class="orientation-content">
             <p>Gira tu pantalla</p>
         </div>
     </div>
 
-    <!-- BOTÓN HAMBURGUESA -->
     <button id="btnHamburger" class="btn-hamburger">☰</button>
 
-    <!-- CONTENEDOR PRINCIPAL -->
     <div class="container">
 
-        <!-- PANEL IZQUIERDO -->
         <div class="left-panel">
-
             <h2 style="margin-top:0; text-align:center;">📺 Registro de Animes</h2>
 
             <div class="tabla-wrapper">
@@ -43,17 +35,15 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        </tbody>
                 </table>
             </div>
-
         </div>
 
-        <!-- PANEL DERECHO -->
         <div id="rightPanelWrapper" class="right-panel-wrapper">
             <div class="right-panel">
 
-                <!-- BUSCADOR + TEMA -->
                 <table>
                     <thead>
                         <tr>
@@ -72,12 +62,10 @@
                     </thead>
                 </table>
 
-                <!-- ACCIONES -->
                 <button id="btnAgregar" class="btn-primary">➕ Nuevo Anime</button>
+                <button id="btnCompartir" class="btn-style">🔗 Compartir Lista</button>
 
-                <!-- FILTROS -->
                 <div class="filters">
-
                     <h4>Estado</h4>
                     <div class="filter-group" id="filtroEstado">
                         <button data-estado="todos" class="active">Todos</button>
@@ -99,12 +87,10 @@
                         <button data-calificacion="4">⭐⭐⭐⭐</button>
                         <button data-calificacion="5">⭐⭐⭐⭐⭐</button>
                     </div>
-
                 </div>
 
                 <hr />
 
-                <!-- UTILIDADES -->
                 <button id="btnExportarCSV" class="btn-style">📤 Exportar CSV</button>
 
                 <button class="btn-style">
@@ -114,19 +100,16 @@
                     </label>
                 </button>
 
-                <button id="btnEliminarDuplicados" class="btn-style">🧹 Eliminar duplicados</button>
-                <button id="btnReset" class="btn-style">🗑️ Borrar todos</button>
-                <button id="btnCompartir" class="btn-style" style="background:#4caf50;">🔗 Compartir (Solo Lectura)</button>
+                <button id="btnEliminarDuplicados" class="btn-style">🧹 Limpiar Duplicados</button>
+                <button id="btnReset" class="btn-style">🗑️ Borrar Todo</button>
+
             </div>
         </div>
     </div>
 
-    <!-- MODAL -->
     <div id="modal" class="modal hidden">
         <div class="modal-content">
-
             <h3 id="modalTitle">Nuevo Anime</h3>
-
             <form id="formAnime">
                 <input type="text" id="nombre" placeholder="Nombre del anime" required />
 
@@ -155,11 +138,9 @@
                     <button type="button" id="cerrarModal">Cancelar</button>
                 </div>
             </form>
-
         </div>
     </div>
 
-    <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
     <script src="app.js"></script>
